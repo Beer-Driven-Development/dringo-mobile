@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _title() {
     return Text(
-      'audioholics',
+      'Dringo',
       style: TextStyle(
           fontSize: 50, fontWeight: FontWeight.w900, color: Colors.blue),
     );
