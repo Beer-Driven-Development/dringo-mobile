@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class SocialLogin extends StatelessWidget {
+class SocialSignIn extends StatelessWidget {
   Widget _facebookButton() {
     return Container(
       height: 100,
       width: 75,
       child: IconButton(
+          iconSize: 36.0,
           icon: FaIcon(
             FontAwesomeIcons.facebookF,
-            color: Colors.blue,
+            color: Colors.blue[700],
           ),
           onPressed: null),
     );
@@ -20,9 +21,10 @@ class SocialLogin extends StatelessWidget {
       height: 100,
       width: 75,
       child: IconButton(
+        iconSize: 36.0,
         icon: FaIcon(
           FontAwesomeIcons.google,
-          color: Colors.red,
+          color: Colors.red[700],
         ),
         onPressed: null,
       ),

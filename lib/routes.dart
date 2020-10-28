@@ -1,9 +1,9 @@
-import 'package:dringo/screens/HomeScreen.dart';
-import 'package:dringo/screens/LoginScreen.dart';
-import 'package:dringo/screens/RegisterScreen.dart';
+import 'package:dringo/pages/dashboard.dart';
+import 'package:dringo/pages/login.dart';
+import 'package:dringo/pages/register.dart';
 
 final routes = {
-  HomeScreen.routeName: (ctx) => HomeScreen(),
-  LoginScreen.routeName: (ctx) => LoginScreen(),
-  RegisterScreen.routeName: (ctx) => RegisterScreen(),
+  DashBoard.routeName: (ctx) => DashBoard(),
+  Login.routeName: (ctx) => Login(),
+  Register.routeName: (ctx) => Register(),
 };
