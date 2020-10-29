@@ -38,7 +38,7 @@ class _LoginState extends State<Login> {
     );
 
     final passwordField = TextFormField(
-      style: TextStyle(fontSize: 18.0),
+      style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       obscureText: true,
       validator: (value) => value.isEmpty ? "Please enter password" : null,
