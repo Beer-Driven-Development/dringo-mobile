@@ -81,7 +81,7 @@ class _DashBoardState extends State<DashBoard> {
     Map<String, dynamic> joinRoom = {
       "event": "joinRoom",
       "data": [
-        {"id": 10},
+        {"id": 1},
         {"token": user.token}
       ]
     };
