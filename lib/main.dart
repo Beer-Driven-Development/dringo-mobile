@@ -1,11 +1,10 @@
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/login.dart';
+import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
-import 'package:dringo/util/app_url.dart';
 import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:web_socket_channel/io.dart';
 
 import 'domain/user.dart';
 import 'providers/auth.dart';
@@ -24,6 +23,7 @@ class Dringo extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => RoomProvider()),
       ],
       child: MaterialApp(
           title: 'Dringo',
@@ -47,7 +47,6 @@ class Dringo extends StatelessWidget {
                       UserPreferences().removeUser();
                     return DashBoard(
                       user: snapshot.data,
-                      channel: IOWebSocketChannel.connect(AppUrl.baseWsURL),
                     );
                 }
               }),
