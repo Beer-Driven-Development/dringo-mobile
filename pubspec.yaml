@@ -27,6 +27,7 @@ dependencies:
   socket_io_client: ^0.9.11
   flutter_simple_dependency_injection: ^1.0.4
   provider: ^4.3.2+2
+  rxdart: ^0.24.1
   shared_preferences: ^0.5.12+2
   image_picker: ^0.6.7+12
   font_awesome_flutter: ^8.10.0

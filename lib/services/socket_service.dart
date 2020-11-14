@@ -2,28 +2,36 @@ import 'dart:async';
 
 import 'package:dringo/util/app_url.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService with ChangeNotifier {
   IO.Socket socket;
   var data = 'kurde faja';
-  final _socketResponse = StreamController<String>();
+  var _socketResponse = new BehaviorSubject<List<String>>();
 
-  void Function(String) get addResponse => _socketResponse.sink.add;
+  Sink<List<String>> get sink => _socketResponse.sink;
 
-  Stream<String> get getResponse => _socketResponse.stream;
+  void Function(List<String>) get addResponse => _socketResponse.sink.add;
+
+  Stream<List<String>> get getResponse => _socketResponse.stream;
 
   void dispose() {
+    super.dispose();
     _socketResponse.close();
+    _socketResponse = StreamController<List<String>>();
   }
 
   createSocketConnection() {
     socket = IO.io(AppUrl.baseURL, <String, dynamic>{
       'transports': ['websocket'],
     });
-    this.socket.on("connect", (_) => addResponse('Connected'));
-    this.socket.on("disconnect", (_) => print('Disconnected'));
-    this.socket.on('joinedRoom', (data) => addResponse(data));
+    this.socket.on(
+        "connect", (data) => _socketResponse.sink.add(new List()..add(data)));
+    this.socket.on("disconnect",
+        (data) => _socketResponse.sink.add(new List()..add(data)));
+    this.socket.on('joinedRoom',
+        (data) => _socketResponse.sink.add(new List()..add(data)));
   }
 
   sendMessage(String event, message) {
