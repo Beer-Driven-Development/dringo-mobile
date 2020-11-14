@@ -36,4 +36,25 @@ class RoomProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Room findById(int id) {
+    return _rooms.firstWhere((room) => room.id == id);
+  }
+
+  // Future<void> enter(int id, String passcode) async {
+  //   final token = await UserPreferences().getToken();
+  //   var data = {
+  //     "data": {"id": id, "passcode": passcode, "token": token}
+  //   };
+  //   IO.Socket socket = IO.io(AppUrl.baseURL, <String, dynamic>{
+  //     'transports': ['websocket'],
+  //     'autoConnect': false,
+  //   });
+  //   socket.connect();
+  //   socket.emit('joinRoom', data);
+  //   socket.on('joinedRoom', (data) => log(data));
+  //   socket.on('accessDenied', (data) => log(data));
+  //   notifyListeners();
+  // }
+
 }

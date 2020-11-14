@@ -2,19 +2,40 @@ import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/login.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
+import 'package:dringo/services/app_initializer.dart';
+import 'package:dringo/services/dependency_injection.dart';
+import 'package:dringo/services/socket_service.dart';
 import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:provider/provider.dart';
 
 import 'domain/user.dart';
 import 'providers/auth.dart';
 import 'routes.dart';
 
-void main() {
+Injector injector;
+
+void main() async {
+  DependencyInjection().initialise(Injector());
+  injector = Injector();
+  await AppInitializer().initialise(injector);
   runApp(Dringo());
 }
 
-class Dringo extends StatelessWidget {
+class Dringo extends StatefulWidget {
+  @override
+  _DringoState createState() => _DringoState();
+}
+
+class _DringoState extends State<Dringo> {
+  bool _connectedToSocket;
+  String _errorConnectMessage;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<User> getUserData() => UserPreferences().getUser();
@@ -24,6 +45,7 @@ class Dringo extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => RoomProvider()),
+        ChangeNotifierProvider(create: (_) => SocketService()),
       ],
       child: MaterialApp(
           title: 'Dringo',

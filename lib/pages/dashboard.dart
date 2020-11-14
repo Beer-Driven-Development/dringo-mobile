@@ -1,13 +1,11 @@
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
-import 'package:dringo/util/app_url.dart';
 import 'package:dringo/widgets/app_drawer.dart';
 import 'package:dringo/widgets/rooms_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class DashBoard extends StatefulWidget {
   static const routeName = '/home';
@@ -111,10 +109,7 @@ class _DashBoardState extends State<DashBoard> {
             "data": {"id": 11, "passcode": "1234", "token": user.token}
           };
           //Send the message as JSON data to send_message event
-          IO.Socket socket = IO.io(AppUrl.baseURL, <String, dynamic>{
-            'transports': ['websocket'],
-            'autoConnect': false,
-          });
+
           socket.connect();
           socket.emit('joinRoom', data);
           //Add the message to the list
