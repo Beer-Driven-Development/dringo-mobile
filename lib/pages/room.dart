@@ -28,6 +28,8 @@ class _RoomState extends State<Room> {
       super.dispose();
     }
 
+    var participants = new List<String>();
+
     final room = Provider.of<RoomProvider>(
       context,
       listen: false,
@@ -35,7 +37,9 @@ class _RoomState extends State<Room> {
 
     return StreamBuilder(
       stream: socketService.getResponse,
-      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) participants.add(snapshot.data.toString());
+
         return Scaffold(
           body: Container(
             child: Column(children: [
@@ -45,7 +49,7 @@ class _RoomState extends State<Room> {
                 style: TextStyle(fontSize: 24.0),
               ),
               SizedBox(height: 70.0),
-              if (snapshot.hasData) Text(snapshot.data.toString())
+              for (var participant in participants) Text(participant)
             ]),
           ),
         );
