@@ -40,17 +40,22 @@ class _RoomState extends State<Room> {
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.hasData) participants.add(snapshot.data.toString());
 
-        return Scaffold(
-          body: Container(
-            child: Column(children: [
-              SizedBox(height: 70.0),
-              Text(
-                room.name,
-                style: TextStyle(fontSize: 24.0),
-              ),
-              SizedBox(height: 70.0),
-              for (var participant in participants) Text(participant)
-            ]),
+        return WillPopScope(
+          onWillPop: () async {
+            return await socketService.leaveRoom();
+          },
+          child: Scaffold(
+            body: Container(
+              child: Column(children: [
+                SizedBox(height: 70.0),
+                Text(
+                  room.name,
+                  style: TextStyle(fontSize: 24.0),
+                ),
+                SizedBox(height: 70.0),
+                for (var participant in participants) Text(participant)
+              ]),
+            ),
           ),
         );
       },

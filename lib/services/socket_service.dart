@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dringo/util/app_url.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -29,6 +29,11 @@ class SocketService with ChangeNotifier {
     this.socket.on("connect", (data) => _socketResponse.sink.add(data));
     this.socket.on("disconnect", (data) => _socketResponse.sink.add(data));
     this.socket.on('joinedRoom', (data) => _socketResponse.sink.add(data));
+    this.socket.on('userLeft', (data) => _socketResponse.sink.add(data));
+  }
+
+  leaveRoom() {
+    this.socket.emit('leaveRoom');
   }
 
   sendMessage(String event, message) {
