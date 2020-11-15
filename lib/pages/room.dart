@@ -24,7 +24,6 @@ class _RoomState extends State<Room> {
   Widget build(BuildContext context) {
     int id = ModalRoute.of(context).settings.arguments;
     final SocketService socketService = injector.get<SocketService>();
-    final token = UserPreferences().getToken();
     void dispose() {
       super.dispose();
     }
@@ -43,6 +42,7 @@ class _RoomState extends State<Room> {
 
         return WillPopScope(
           onWillPop: () async {
+            final token = await UserPreferences().getToken();
             var message = new MessageModel().fromIdToJson(token.toString(), id);
             return await socketService.leaveRoom('leaveRoom', message);
           },
