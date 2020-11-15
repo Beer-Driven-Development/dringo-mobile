@@ -1,6 +1,7 @@
+import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/services/socket_service.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class _RoomState extends State<Room> {
   Widget build(BuildContext context) {
     int id = ModalRoute.of(context).settings.arguments;
     final SocketService socketService = injector.get<SocketService>();
-
+    final token = UserPreferences().getToken();
     void dispose() {
       super.dispose();
     }
@@ -42,7 +43,8 @@ class _RoomState extends State<Room> {
 
         return WillPopScope(
           onWillPop: () async {
-            return await socketService.leaveRoom();
+            var message = new MessageModel().fromIdToJson(token.toString(), id);
+            return await socketService.sendMessage('leaveRoom', message);
           },
           child: Scaffold(
             body: Container(

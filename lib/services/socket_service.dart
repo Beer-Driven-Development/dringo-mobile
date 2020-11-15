@@ -32,10 +32,6 @@ class SocketService with ChangeNotifier {
     this.socket.on('userLeft', (data) => _socketResponse.sink.add(data));
   }
 
-  leaveRoom() {
-    this.socket.emit('leaveRoom');
-  }
-
   sendMessage(String event, message) {
     this.socket.emit(event, message);
   }
