@@ -44,7 +44,7 @@ class _RoomState extends State<Room> {
         return WillPopScope(
           onWillPop: () async {
             var message = new MessageModel().fromIdToJson(token.toString(), id);
-            return await socketService.sendMessage('leaveRoom', message);
+            return await socketService.leaveRoom('leaveRoom', message);
           },
           child: Scaffold(
             body: Container(
