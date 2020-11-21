@@ -1,6 +1,7 @@
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/providers/user_provider.dart';
+import 'package:dringo/util/colors_palette.dart';
 import 'package:dringo/util/shared_preference.dart';
 import 'package:dringo/util/validators.dart';
 import 'package:dringo/util/widgets.dart';
@@ -100,8 +101,13 @@ class _RegisterState extends State<Register> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xffa99164),
         body: Container(
+          constraints:BoxConstraints.expand(),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Color(ColorsPalette.secondaryColor), Color(ColorsPalette.primaryColor) ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight)),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
@@ -109,12 +115,12 @@ class _RegisterState extends State<Register> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 50.0),
+                  SizedBox(height: 135.0),
                   Text(
                     'Fill this sign up form',
                     style: TextStyle(
                         fontSize: 32.0,
-                        color: Colors.black,
+                        color: Colors.white,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'Playfair Display'),
                   ),
@@ -124,7 +130,7 @@ class _RegisterState extends State<Register> {
                   passwordField,
                   SizedBox(height: 30.0),
                   usernameField,
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 40.0),
                   auth.loggedInStatus == Status.Authenticating
                       ? loading
                       : Center(
@@ -137,12 +143,14 @@ class _RegisterState extends State<Register> {
                                 borderRadius: new BorderRadius.circular(50.0)),
                             child: Text(
                               'Sign up'.toUpperCase(),
-                              style: TextStyle(fontSize: 18.0),
+                              style: TextStyle(fontSize: 18.0, color: Colors.indigoAccent)
                             ),
                             onPressed: doRegister,
                           ),
                         ),
+                  SizedBox(height: 30.0),
                   AppDivider(),
+                  SizedBox(height: 20.0),
                   signInLabel
                 ],
               ),
