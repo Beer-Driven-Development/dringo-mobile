@@ -1,4 +1,5 @@
 import 'package:dringo/domain/user.dart';
+import 'package:dringo/pages/create_room/create_room_name_passcode.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/widgets/app_drawer.dart';
@@ -150,6 +151,10 @@ class _DashBoardState extends State<DashBoard> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: AppDrawer(),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.fromLTRB(0,0,15.0,60.0),
+        child: FloatingActionButton(child: Icon( Icons.add), onPressed:(){Navigator.pushNamed(context, CreateRoomNamePasscode.routeName);} ),
+      ),
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),

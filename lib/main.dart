@@ -1,5 +1,6 @@
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/login.dart';
+import 'package:dringo/providers/category_provider.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/services/app_initializer.dart';
@@ -45,6 +46,7 @@ class _DringoState extends State<Dringo> {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => RoomProvider()),
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => SocketService()),
       ],
       child: MaterialApp(

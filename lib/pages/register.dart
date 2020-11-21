@@ -69,7 +69,7 @@ class _RegisterState extends State<Register> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         CircularProgressIndicator(),
-        Text(" Registering... Please wait")
+        Text(" Registering... Please wait", style: TextStyle(color: Colors.white))
       ],
     );
 

@@ -9,4 +9,5 @@ class AppUrl {
   static const String login = baseURL + "/auth/login";
   static const String register = baseURL + "/auth/register";
   static const String rooms = baseURL + "/rooms";
+  static const String categories = baseURL + "/categories";
 }
