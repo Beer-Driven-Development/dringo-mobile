@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/register.dart';
 import 'package:dringo/providers/user_provider.dart';
+import 'package:dringo/util/colors_palette.dart';
 import 'package:dringo/util/shared_preference.dart';
 import 'package:dringo/util/validators.dart';
 import 'package:dringo/util/widgets.dart';
@@ -9,6 +12,7 @@ import 'package:dringo/widgets/app_divider.dart';
 import 'package:dringo/widgets/social_sign_in.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
@@ -92,11 +96,18 @@ class _LoginState extends State<Login> {
         print("form is invalid");
       }
     };
-
+    // SystemChrome.setEnabledSystemUIOverlays([]);
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xffa99164),
+        backgroundColor: Colors.white,
+
         body: Container(
+            constraints:BoxConstraints.expand(),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Color(ColorsPalette.secondaryColor), Color(ColorsPalette.primaryColor) ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight)),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
@@ -111,7 +122,7 @@ class _LoginState extends State<Login> {
                       style: TextStyle(
                           fontFamily: 'Playfair Display',
                           fontWeight: FontWeight.w900,
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 64.0,
                           letterSpacing: 1.2),
                     ),
@@ -120,7 +131,7 @@ class _LoginState extends State<Login> {
                   usernameField,
                   SizedBox(height: 30.0),
                   passwordField,
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 50.0),
                   auth.loggedInStatus == Status.Authenticating
                       ? loading
                       : Center(
@@ -133,15 +144,16 @@ class _LoginState extends State<Login> {
                                 borderRadius: new BorderRadius.circular(50.0)),
                             child: Text(
                               'Sign in'.toUpperCase(),
-                              style: TextStyle(fontSize: 18.0),
+                              style: TextStyle(fontSize: 18.0, color:Colors.indigoAccent),
                             ),
                             onPressed: doLogin,
                           ),
                         ),
-                  SizedBox(height: 20.0),
-                  AppDivider(),
-                  SocialSignIn(),
                   SizedBox(height: 50.0),
+                  AppDivider(),
+                  SizedBox(height: 30.0),
+                  SocialSignIn(),
+                  SizedBox(height: 30.0),
                   signUpLabel,
                 ],
               ),

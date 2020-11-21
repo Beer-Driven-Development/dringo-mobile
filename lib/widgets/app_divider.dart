@@ -15,6 +15,7 @@ class AppDivider extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Divider(
                 thickness: 1,
+                color: Colors.white
               ),
             ),
           ),
@@ -27,6 +28,7 @@ class AppDivider extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Divider(
                 thickness: 1,
+                  color: Colors.white
               ),
             ),
           ),
