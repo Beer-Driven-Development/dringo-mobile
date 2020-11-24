@@ -32,6 +32,7 @@ class Dringo extends StatefulWidget {
 class _DringoState extends State<Dringo> {
   bool _connectedToSocket;
   String _errorConnectMessage;
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +56,7 @@ class _DringoState extends State<Dringo> {
               primarySwatch: Colors.blue,
               visualDensity: VisualDensity.adaptivePlatformDensity,
               fontFamily: 'Poppins'),
+              color: Colors.white,
           home: FutureBuilder(
               future: getUserData(),
               builder: (context, snapshot) {

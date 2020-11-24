@@ -1,5 +1,6 @@
 import 'package:dringo/domain/category.dart';
 import 'package:dringo/domain/user.dart';
+import 'package:dringo/domain/value_object.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/providers/auth.dart';
 import 'package:dringo/providers/category_provider.dart';
@@ -10,6 +11,7 @@ import 'package:dringo/util/validators.dart';
 import 'package:dringo/util/widgets.dart';
 import 'package:dringo/widgets/app_divider.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,55 +24,73 @@ class CreateRoomCategories extends StatefulWidget {
 
 class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
   final formKey = new GlobalKey<FormState>();
-  var dropdownValue = category.categories.first;
+  var categories;
+  List<DropdownMenuItem<Category>> _dropdownMenuItems;
+  List<DropdownMenuItem<ValueObject>> _dropdownMenuItemsValueObject;
+  Category _selectedCategory;
+  ValueObject _selectedValueObject;
+
+  List<ValueObject> _dropdownItems = [
+    ValueObject(id: 1, value: "1"),
+    ValueObject(id: 2, value: "2"),
+    ValueObject(id: 3, value: "3"),
+    ValueObject(id: 4, value: "4"),
+    ValueObject(id: 5, value: "5"),
+  ];
+
+ _addCategory(int id, int weight )
+ {
+
+ }
+
 
 
   @override
+  void initState() {
+    categories =
+        Provider.of<CategoryProvider>(context, listen: false).categories;
+    _dropdownMenuItems = buildDropDownMenuItems(categories);
+    _selectedCategory = _dropdownMenuItems[0].value;
+    _dropdownMenuItemsValueObject = buildDropDownMenuItemsValueObject(_dropdownItems);
+    _selectedValueObject =  _dropdownMenuItemsValueObject[0].value;
+
+
+    super.initState();
+  }
+
+  List<DropdownMenuItem<Category>> buildDropDownMenuItems(List listCategories) {
+    List<DropdownMenuItem<Category>> categories = List();
+    for (Category category in listCategories) {
+      categories.add(
+        DropdownMenuItem(
+          child: Text(category.name),
+          value: category,
+        ),
+      );
+    }
+    return categories;
+  }
+
+
+  List<DropdownMenuItem<ValueObject>> buildDropDownMenuItemsValueObject(List listItems) {
+    List<DropdownMenuItem<ValueObject>> items = List();
+    for (ValueObject listItem in listItems) {
+      items.add(
+        DropdownMenuItem(
+          child: Text(listItem.value),
+          value: listItem,
+        ),
+      );
+    }
+    return items;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    CategoryProvider category = Provider.of<CategoryProvider>(context);
-
-
-    var categoriesListDropdown = DropdownButton<Category>(
-      value: dropdownValue,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (var newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
-      },
-      items: category.categories.map<DropdownMenuItem<Category>>((var value) {
-        return DropdownMenuItem(
-          value: value,
-          child: Text(value.name.toString()),
-        );
-      }).toList(),
-    );
-
-
-    var createRoom= () {
+    var createRoom = () {
       final form = formKey.currentState;
       if (form.validate()) {
         form.save();
-        // auth.register(_name, _passcode).then((response) {
-        //   if (response.isNotEmpty) {
-        //     User user = User.fromToken(response);
-        //     Provider.of<UserProvider>(context, listen: false).setUser(user);
-        //     Navigator.pushReplacementNamed(context, DashBoard.routeName);
-        //   } else {
-        //     Flushbar(
-        //       title: "Registration Failed",
-        //       message: response.toString(),
-        //       duration: Duration(seconds: 10),
-        //     ).show(context);
-        //   }
-        // });
       } else {
         Flushbar(
           title: "Invalid form",
@@ -83,45 +103,89 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          constraints:BoxConstraints.expand(),
+          constraints: BoxConstraints.expand(),
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Color(ColorsPalette.secondaryColor), Color(ColorsPalette.primaryColor) ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight)),
+              gradient: LinearGradient(colors: [
+            Color(ColorsPalette.secondaryColor),
+            Color(ColorsPalette.primaryColor)
+          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
             child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                //Center Column contents vertically,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 135.0),
                   Text(
-                    'Create room',
+                    'Choose category and weight',
                     style: TextStyle(
-                        fontSize: 32.0,
+                        fontSize: 26.0,
                         color: Colors.white,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'Playfair Display'),
                   ),
                   SizedBox(height: 30.0),
+                  Row(
+                    mainAxisSize: MainAxisSize.min, // see 3
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: DropdownButton<Category>( isExpanded: true,
+                              value: _selectedCategory,
+                              selectedItemBuilder: (BuildContext context) {
+                                return categories.map<Widget>((Category category) {
+                                  return Text(category.name, overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(color: Colors.white), softWrap: true, );
+                                }).toList();
+                              },
+                              items: _dropdownMenuItems,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedCategory = value;
+                                });
+                              }),
+                        ),
+                      ),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: DropdownButton<ValueObject>(
+                              value:  _selectedValueObject,
 
-                  categoriesListDropdown,
-
-                  SizedBox(height: 40.0),
+                              selectedItemBuilder: (BuildContext context) {
+                                return _dropdownItems.map<Widget>((ValueObject vo) {
+                                  return Text(vo.value, overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(color: Colors.white), softWrap: false, );
+                                }).toList();
+                              },
+                              items: _dropdownMenuItemsValueObject,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedValueObject = value;
+                                });
+                              }),
+                        ),
+                      ),
+                      Flexible(child: IconButton(icon: Icon(Icons.add), onPressed: (){
+                        _addCategory(_selectedCategory.id, _selectedValueObject.id);
+                      }))
+                    ],
+                  ),
+                  SizedBox(height: 120.0),
                   Center(
                     child: RaisedButton(
                       elevation: 10,
                       color: Colors.white,
-                      padding: EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 50),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 50),
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(50.0)),
-                      child: Text(
-                          'Next'.toUpperCase(),
-                          style: TextStyle(fontSize: 18.0, color: Colors.indigoAccent)
-                      ),
+                      child: Text('Next'.toUpperCase(),
+                          style: TextStyle(
+                              fontSize: 18.0, color: Colors.indigoAccent)),
                       onPressed: createRoom,
                     ),
                   ),

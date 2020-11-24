@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class Room with ChangeNotifier {
   int id;
   String name;
+  String passcode;
   DateTime createdAt;
   DateTime startedAt;
   DateTime finishedAt;
@@ -12,7 +13,7 @@ class Room with ChangeNotifier {
 
   Room(
       {@required this.id,
-      @required this.name,
+      @required this.name, @required this.passcode,
       this.createdAt,
       this.startedAt,
       this.finishedAt,
@@ -23,6 +24,7 @@ class Room with ChangeNotifier {
     return Room(
       id: responseData['id'],
       name: responseData['name'],
+      passcode: responseData['passcode'],
     );
   }
 }

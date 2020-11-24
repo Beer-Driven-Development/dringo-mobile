@@ -13,6 +13,9 @@ class RoomProvider with ChangeNotifier {
     return [..._rooms];
   }
 
+
+
+
   Future<void> getAll() async {
     final token = await UserPreferences().getToken();
 
@@ -41,20 +44,34 @@ class RoomProvider with ChangeNotifier {
     return _rooms.firstWhere((room) => room.id == id);
   }
 
-  // Future<void> enter(int id, String passcode) async {
-  //   final token = await UserPreferences().getToken();
-  //   var data = {
-  //     "data": {"id": id, "passcode": passcode, "token": token}
-  //   };
-  //   IO.Socket socket = IO.io(AppUrl.baseURL, <String, dynamic>{
-  //     'transports': ['websocket'],
-  //     'autoConnect': false,
-  //   });
-  //   socket.connect();
-  //   socket.emit('joinRoom', data);
-  //   socket.on('joinedRoom', (data) => log(data));
-  //   socket.on('accessDenied', (data) => log(data));
-  //   notifyListeners();
-  // }
+  Future<Room> createRoom(String name, String passcode) async {
+
+    final Map<String, dynamic> roomData = {
+      'name': name,
+      'passcode': passcode
+    };
+
+    final token = await UserPreferences().getToken();
+
+    final response = await post(
+      AppUrl.rooms,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      },
+      body: json.encode(roomData),
+
+    );
+
+    if (response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      final room = Room.fromJson(responseData);
+
+     return room;
+
+    }
+    throw new Exception('Bad Request');
+  }
+
 
 }

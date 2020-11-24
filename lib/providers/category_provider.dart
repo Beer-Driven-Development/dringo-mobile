@@ -38,4 +38,31 @@ class CategoryProvider with ChangeNotifier {
   }
 
 
+  Future<void> addCategory() async {
+    final token = await UserPreferences().getToken();
+
+    final response = await post(
+      AppUrl.categories,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body) as List;
+
+      final List<Category> categories = [];
+      for (var category in responseData) {
+        categories.add(Category.fromJson(category));
+      }
+
+      _categories =  categories;
+      notifyListeners();
+    }
+  }
+
+
+
+
 }
