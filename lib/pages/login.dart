@@ -12,7 +12,6 @@ import 'package:dringo/widgets/app_divider.dart';
 import 'package:dringo/widgets/social_sign_in.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
@@ -53,8 +52,11 @@ class _LoginState extends State<Login> {
     var loading = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        CircularProgressIndicator(),
-        Text(" Authenticating ... Please wait")
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 0),
+          child: CircularProgressIndicator(),
+        ),
+        Text(" Authenticating... Please wait", style: TextStyle(color: Colors.white))
       ],
     );
 

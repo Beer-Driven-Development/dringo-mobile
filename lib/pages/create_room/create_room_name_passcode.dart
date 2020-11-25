@@ -40,7 +40,7 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final nameField = TextFormField(
-      style: TextStyle(fontSize: 18.0),
+      style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       validator: (value) => value.isEmpty ? "Please enter name of room" : null,
       onChanged: (value) => _name = value,
@@ -48,7 +48,7 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
     );
 
     final passcodeField = TextFormField(
-      style: TextStyle(fontSize: 18.0),
+      style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       obscureText: true,
       validator: (value) => value.isEmpty ? "Please enter passcode" : null,
@@ -60,19 +60,6 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
       final form = formKey.currentState;
       if (form.validate()) {
         form.save();
-        // auth.register(_name, _passcode).then((response) {
-        //   if (response.isNotEmpty) {
-        //     User user = User.fromToken(response);
-        //     Provider.of<UserProvider>(context, listen: false).setUser(user);
-        //     Navigator.pushReplacementNamed(context, DashBoard.routeName);
-        //   } else {
-        //     Flushbar(
-        //       title: "Registration Failed",
-        //       message: response.toString(),
-        //       duration: Duration(seconds: 10),
-        //     ).show(context);
-        //   }
-        // });
       } else {
         Flushbar(
           title: "Invalid form",

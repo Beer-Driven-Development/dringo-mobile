@@ -169,7 +169,7 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                               }),
                         ),
                       ),
-                      Flexible(child: IconButton(icon: Icon(Icons.add), onPressed: (){
+                      Flexible(child: IconButton(icon: Icon(Icons.add), color:Colors.white, onPressed: (){
                         _addCategory(_selectedCategory.id, _selectedValueObject.id);
                       }))
                     ],
