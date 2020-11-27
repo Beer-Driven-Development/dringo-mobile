@@ -51,7 +51,7 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
       _loggedInStatus = Status.LoggedIn;
       notifyListeners();
 
-      result = {'status': true, 'message': 'Successful'};
+      result = {'status': true, 'message': 'Successful' , 'token' :token};
     } else {
       _loggedInStatus = Status.NotLoggedIn;
       notifyListeners();
@@ -78,7 +78,7 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
   }
 
   Future<void> logout() async {
-    UserPreferences().removeUser();
+    this.deleteAll();
     _loggedInStatus = Status.NotLoggedIn;
     notifyListeners();
   }

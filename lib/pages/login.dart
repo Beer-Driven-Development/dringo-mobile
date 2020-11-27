@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/register.dart';
@@ -23,7 +24,7 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Login>{
   final formKey = new GlobalKey<FormState>();
 
   String _username, _password;
@@ -65,7 +66,6 @@ class _LoginState extends State<Login> {
         child: Text("No account? Sign up instead!",
             style: TextStyle(fontSize: 18.0, color: Colors.white)),
         onPressed: () {
-          UserPreferences().removeUser();
           Navigator.pushReplacementNamed(context, Register.routeName);
         },
       ),
@@ -82,9 +82,9 @@ class _LoginState extends State<Login> {
 
         successfulMessage.then((response) {
           if (response['status']) {
-            User user = response['user'];
-            Provider.of<UserProvider>(context, listen: false).setUser(user);
-            if (user != null)
+            String token = response['token'];
+            Provider.of<UserProvider>(context, listen: false).setUser(token);
+            if (token != null)
               Navigator.pushReplacementNamed(context, DashBoard.routeName);
           } else {
             Flushbar(

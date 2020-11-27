@@ -1,3 +1,4 @@
+import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/providers/user_provider.dart';
@@ -20,7 +21,7 @@ class Register extends StatefulWidget {
   _RegisterState createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterState extends State<Register> with SecureStorageMixin{
   final formKey = new GlobalKey<FormState>();
 
   String _email, _password, _username;
@@ -59,7 +60,6 @@ class _RegisterState extends State<Register> {
         child: Text("Have an account? Sign in instead!",
             style: TextStyle(fontSize: 18.0, color: Colors.white)),
         onPressed: () {
-          UserPreferences().removeUser();
           Navigator.pushReplacementNamed(context, Login.routeName);
         },
       ),
@@ -79,8 +79,7 @@ class _RegisterState extends State<Register> {
         form.save();
         auth.register(_email, _password, _username).then((response) {
           if (response.isNotEmpty) {
-            User user = User.fromToken(response);
-            Provider.of<UserProvider>(context, listen: false).setUser(user);
+            Provider.of<UserProvider>(context, listen: false).setUser(response);
             Navigator.pushReplacementNamed(context, DashBoard.routeName);
           } else {
             Flushbar(

@@ -1,4 +1,5 @@
 import 'package:dringo/domain/message_model.dart';
+import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/services/socket_service.dart';
 import 'package:dringo/util/shared_preference.dart';
@@ -14,7 +15,7 @@ class Room extends StatefulWidget {
   _RoomState createState() => _RoomState();
 }
 
-class _RoomState extends State<Room> {
+class _RoomState extends State<Room> with SecureStorageMixin{
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,7 @@ class _RoomState extends State<Room> {
 
         return WillPopScope(
           onWillPop: () async {
-            final token = await UserPreferences().getToken();
+            final token =  await getSecureStorage("token");
             var message = new MessageModel().fromIdToJson(token.toString(), id);
             return await socketService.leaveRoom('leaveRoom', message);
           },

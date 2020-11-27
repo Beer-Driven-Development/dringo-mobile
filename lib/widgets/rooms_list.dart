@@ -1,5 +1,6 @@
 import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/room.dart';
+import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/pages/room.dart' as RoomPage;
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/services/socket_service.dart';
@@ -9,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../main.dart';
 
-class RoomsList extends StatelessWidget {
+class RoomsList extends StatelessWidget with SecureStorageMixin{
   RoomsList();
 
   @override
@@ -21,7 +22,7 @@ class RoomsList extends StatelessWidget {
     final rooms = roomsData.rooms;
     Future _asyncInputDialog(BuildContext context, int id) async {
       String passcode = '';
-      final token = await UserPreferences().getToken();
+      final token = await getSecureStorage("token");
 
       return showDialog(
         context: context,

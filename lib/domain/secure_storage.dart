@@ -10,4 +10,13 @@ class SecureStorageMixin {
   Future<String> getSecureStorage(String key) async {
     return await secureStore.read(key: key);
   }
+
+  void delete(String key) async {
+    await secureStore.delete(key: key);
+  }
+
+  void deleteAll() async {
+    await secureStore.deleteAll();
+  }
+
 }

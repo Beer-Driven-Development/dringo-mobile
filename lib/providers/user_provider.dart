@@ -6,8 +6,8 @@ class UserProvider with ChangeNotifier {
 
   User get user => _user;
 
-  void setUser(User user) {
-    _user = user;
+  void setUser(String token) {
+    _user = new User.fromToken(token);
     notifyListeners();
   }
 

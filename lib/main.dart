@@ -70,8 +70,6 @@ class _DringoState extends State<Dringo> with SecureStorageMixin{
                       return Text('Error: ${snapshot.error}');
                     else if (snapshot.data== null)
                       return Login();
-                    else
-                      UserPreferences().removeUser();
                     return DashBoard(
                       token: snapshot.data,
                     );

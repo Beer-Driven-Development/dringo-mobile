@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:dringo/domain/category.dart';
 import 'package:dringo/domain/pivot.dart';
+import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/util/app_url.dart';
 import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-class CategoryProvider with ChangeNotifier {
+class CategoryProvider with ChangeNotifier, SecureStorageMixin {
   List<Category> _categories = [];
   List<Pivot> _pivots = [];
 
@@ -20,7 +21,7 @@ class CategoryProvider with ChangeNotifier {
   }
 
   Future<void> getAll() async {
-    final token = await UserPreferences().getToken();
+    final token = await getSecureStorage("token");
 
     final response = await get(
       AppUrl.categories,
@@ -44,7 +45,7 @@ class CategoryProvider with ChangeNotifier {
   }
 
   Future<void> addCategory(int roomId, int id, int weight) async {
-    final token = await UserPreferences().getToken();
+    final token = await getSecureStorage("token");
 
     final Map<String, dynamic> categoryData = {'id': id, 'weight': weight};
 
@@ -68,7 +69,7 @@ class CategoryProvider with ChangeNotifier {
   }
 
   Future<void> deletePivot(int roomId, int pivotId ) async {
-    final token = await UserPreferences().getToken();
+    final token = await getSecureStorage("token");
 
 
     final response =

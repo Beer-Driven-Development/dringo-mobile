@@ -49,7 +49,7 @@ class RoomProvider with ChangeNotifier, SecureStorageMixin {
   Future<Room> createRoom(String name, String passcode) async {
     final Map<String, dynamic> roomData = {'name': name, 'passcode': passcode};
 
-    final token = await UserPreferences().getToken();
+    final token = await getSecureStorage("token");
 
     final response = await post(
       AppUrl.rooms,
