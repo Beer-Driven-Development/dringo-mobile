@@ -66,4 +66,29 @@ class CategoryProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> deletePivot(int roomId, int pivotId ) async {
+    final token = await UserPreferences().getToken();
+
+
+    final response =
+    await delete(AppUrl.rooms + '/' + roomId.toString() + '/categories/'+ pivotId.toString(),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+        });
+
+
+    if (response.statusCode == 200) {
+      var pivot = _pivots.firstWhere((pivot) => pivot.id == pivotId);
+      final List<Pivot> pivots = _pivots;
+      pivots.remove(pivot);
+      _pivots = pivots;
+      notifyListeners();
+    }
+  }
+
+
+
+
 }

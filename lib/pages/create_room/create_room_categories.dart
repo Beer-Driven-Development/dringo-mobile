@@ -37,6 +37,11 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
         .addCategory(roomId, id, weight);
   }
 
+  _deletePivot(int roomId, int pivotId)
+  {
+    Provider.of<CategoryProvider>(context, listen: false)
+        .deletePivot(roomId, pivotId);
+  }
   @override
   void initState() {
     categories =
@@ -229,6 +234,15 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                                             fontSize: 18.0),
                                       ),
                                     ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: IconButton(
+                                          icon: Icon(Icons.delete_forever),
+                                          color: Colors.white,
+                                          onPressed: () {
+                                            _deletePivot(roomId, pivot.id);
+                                          }),
+                                    )
                                   ],
                                 ),
                               )
