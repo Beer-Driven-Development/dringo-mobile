@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 class DashBoard extends StatefulWidget {
   static const routeName = '/home';
 
-  final User user;
-  DashBoard({Key key, this.user}) : super(key: key);
+  final String token;
+  DashBoard({Key key, this.token}) : super(key: key);
 
   @override
   _DashBoardState createState() => _DashBoardState();

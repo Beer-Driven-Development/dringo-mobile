@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/util/app_url.dart';
 import 'package:dringo/util/shared_preference.dart';
@@ -17,7 +18,7 @@ enum Status {
   LoggedOut
 }
 
-class AuthProvider with ChangeNotifier {
+class AuthProvider with ChangeNotifier, SecureStorageMixin {
   Status _loggedInStatus = Status.NotLoggedIn;
   Status _registeredInStatus = Status.NotRegistered;
 
@@ -45,14 +46,12 @@ class AuthProvider with ChangeNotifier {
       //final Map<String, dynamic> responseData = json.decode(response.body);
       final String token = response.body;
 
-      User authUser = User.fromToken(token);
-
-      UserPreferences().saveUser(authUser);
+      setSecureStorage("token", token);
 
       _loggedInStatus = Status.LoggedIn;
       notifyListeners();
 
-      result = {'status': true, 'message': 'Successful', 'user': authUser};
+      result = {'status': true, 'message': 'Successful'};
     } else {
       _loggedInStatus = Status.NotLoggedIn;
       notifyListeners();
@@ -74,7 +73,7 @@ class AuthProvider with ChangeNotifier {
     final Response response = await post(AppUrl.register,
         body: json.encode(registrationData),
         headers: {'Content-Type': 'application/json'});
-
+    setSecureStorage("token", response.body);
     return response.body;
   }
 
@@ -83,34 +82,32 @@ class AuthProvider with ChangeNotifier {
     _loggedInStatus = Status.NotLoggedIn;
     notifyListeners();
   }
-
-  static Future<FutureOr> onValue(Response response) async {
-    var result;
-    final Map<String, dynamic> responseData = json.decode(response.body);
-
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      var userData = responseData['data'];
-
-      User authUser = User.fromJson(userData);
-
-      UserPreferences().saveUser(authUser);
-      result = {
-        'status': true,
-        'message': 'Successfully registered',
-        'data': authUser
-      };
-    } else {
-//      if (response.statusCode == 401) Get.toNamed("/login");
-      result = {
-        'status': false,
-        'message': 'Registration failed',
-        'data': responseData
-      };
-    }
-
-    return result;
-  }
+//
+//   static Future<FutureOr> onValue(Response response) async {
+//     var result;
+//     final Map<String, dynamic> responseData = json.decode(response.body);
+//
+//     print(response.statusCode);
+//     if (response.statusCode == 200) {
+//       var userData = responseData['data'];
+//
+//
+//       result = {
+//         'status': true,
+//         'message': 'Successfully registered',
+//
+//       };
+//     } else {
+// //      if (response.statusCode == 401) Get.toNamed("/login");
+//       result = {
+//         'status': false,
+//         'message': 'Registration failed',
+//         'data': responseData
+//       };
+//     }
+//
+//     return result;
+//   }
 
   static onError(error) {
     print("the error is $error.detail");

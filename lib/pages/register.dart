@@ -30,7 +30,7 @@ class _RegisterState extends State<Register> {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final emailField = TextFormField(
-      style: TextStyle(fontSize: 18.0),
+      style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       validator: validateEmail,
       onSaved: (value) => _email = value,
@@ -38,7 +38,7 @@ class _RegisterState extends State<Register> {
     );
 
     final passwordField = TextFormField(
-      style: TextStyle(fontSize: 18.0),
+      style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       obscureText: true,
       validator: (value) => value.isEmpty ? "Please enter password" : null,
@@ -47,7 +47,7 @@ class _RegisterState extends State<Register> {
     );
 
     final usernameField = TextFormField(
-      style: TextStyle(fontSize: 18.0),
+      style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       validator: (value) => value.isEmpty ? "Username is required" : null,
       onSaved: (value) => _username = value,

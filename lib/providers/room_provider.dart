@@ -1,23 +1,25 @@
 import 'dart:convert';
 
 import 'package:dringo/domain/room.dart';
+import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/util/app_url.dart';
 import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-class RoomProvider with ChangeNotifier {
+class RoomProvider with ChangeNotifier, SecureStorageMixin {
   List<Room> _rooms = [];
 
   List<Room> get rooms {
     return [..._rooms];
   }
 
-
-
-
   Future<void> getAll() async {
-    final token = await UserPreferences().getToken();
+    final token = await this.getSecureStorage("token");
+
+    if (token == null) {
+      return;
+    }
 
     final response = await get(
       AppUrl.rooms,
@@ -45,11 +47,7 @@ class RoomProvider with ChangeNotifier {
   }
 
   Future<Room> createRoom(String name, String passcode) async {
-
-    final Map<String, dynamic> roomData = {
-      'name': name,
-      'passcode': passcode
-    };
+    final Map<String, dynamic> roomData = {'name': name, 'passcode': passcode};
 
     final token = await UserPreferences().getToken();
 
@@ -60,18 +58,14 @@ class RoomProvider with ChangeNotifier {
         'Authorization': 'Bearer ' + token,
       },
       body: json.encode(roomData),
-
     );
 
     if (response.statusCode == 201) {
       final responseData = json.decode(response.body);
       final room = Room.fromJson(responseData);
 
-     return room;
-
+      return room;
     }
     throw new Exception('Bad Request');
   }
-
-
 }

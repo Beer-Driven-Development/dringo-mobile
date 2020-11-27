@@ -1,3 +1,4 @@
+import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/login.dart';
 import 'package:dringo/providers/category_provider.dart';
@@ -24,12 +25,12 @@ void main() async {
   runApp(Dringo());
 }
 
-class Dringo extends StatefulWidget {
+class Dringo extends StatefulWidget  {
   @override
   _DringoState createState() => _DringoState();
 }
 
-class _DringoState extends State<Dringo> {
+class _DringoState extends State<Dringo> with SecureStorageMixin{
   bool _connectedToSocket;
   String _errorConnectMessage;
 
@@ -40,7 +41,7 @@ class _DringoState extends State<Dringo> {
 
   @override
   Widget build(BuildContext context) {
-    Future<User> getUserData() => UserPreferences().getUser();
+    Future<String> getUserData() => this.getSecureStorage("token");
 
     return MultiProvider(
       providers: [
@@ -67,12 +68,12 @@ class _DringoState extends State<Dringo> {
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
-                    else if (snapshot.data.token == null)
+                    else if (snapshot.data== null)
                       return Login();
                     else
                       UserPreferences().removeUser();
                     return DashBoard(
-                      user: snapshot.data,
+                      token: snapshot.data,
                     );
                 }
               }),
