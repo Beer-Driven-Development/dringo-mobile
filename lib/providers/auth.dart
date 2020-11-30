@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dringo/domain/secure_storage.dart';
-import 'package:dringo/domain/user.dart';
 import 'package:dringo/util/app_url.dart';
-import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 
 enum Status {
@@ -23,6 +22,7 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
   Status _registeredInStatus = Status.NotRegistered;
 
   Status get loggedInStatus => _loggedInStatus;
+
   Status get registeredInStatus => _registeredInStatus;
 
   Future<Map<String, dynamic>> login(String email, String password) async {
@@ -51,7 +51,7 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
       _loggedInStatus = Status.LoggedIn;
       notifyListeners();
 
-      result = {'status': true, 'message': 'Successful' , 'token' :token};
+      result = {'status': true, 'message': 'Successful', 'token': token};
     } else {
       _loggedInStatus = Status.NotLoggedIn;
       notifyListeners();
@@ -61,6 +61,39 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
       };
     }
     return result;
+  }
+
+  Future<String> google() async {
+    String idToken;
+    var result;
+
+    var googleSignInAccount = await GoogleSignIn(
+            scopes: ['email'],
+            clientId:
+                '409741835950-e522n1uski07dmur1b06pt678otkg9ku.apps.googleusercontent.com')
+        .signIn()
+        .then((result) => result.authentication
+            .then((googleKey) => idToken = googleKey.idToken));
+
+    // print(googleSignInAccount.toString());
+    _loggedInStatus = Status.Authenticating;
+    notifyListeners();
+    if (idToken != null) {
+      final Map<String, dynamic> tokenData = {
+        'idToken': idToken,
+      };
+
+      Response response = await post(
+        AppUrl.google,
+        body: json.encode(tokenData),
+        headers: {'Content-Type': 'application/json'},
+      );
+      final String token = response.body;
+      setSecureStorage("token", token);
+      _loggedInStatus = Status.LoggedIn;
+      return token;
+    }
+    return null;
   }
 
   Future<String> register(
@@ -82,6 +115,7 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
     _loggedInStatus = Status.NotLoggedIn;
     notifyListeners();
   }
+
 //
 //   static Future<FutureOr> onValue(Response response) async {
 //     var result;
