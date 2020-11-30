@@ -10,6 +10,7 @@ import 'package:dringo/services/socket_service.dart';
 import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 import 'domain/user.dart';
@@ -17,6 +18,8 @@ import 'providers/auth.dart';
 import 'routes.dart';
 
 Injector injector;
+
+
 
 void main() async {
   DependencyInjection().initialise(Injector());

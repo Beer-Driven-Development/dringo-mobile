@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SocialSignIn extends StatelessWidget {
   Widget _facebookButton() {
@@ -33,7 +34,9 @@ class SocialSignIn extends StatelessWidget {
             FontAwesomeIcons.google,
             color: Colors.red[700],
           ),
-          onPressed: (){}
+          onPressed: (){
+            GoogleSignIn(clientId: '409741835950-3rt0ud59v317lrsrphiakrdpfrt965q5.apps.googleusercontent.com').signIn();
+          }
         ),
       ),
     );
