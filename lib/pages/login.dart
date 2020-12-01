@@ -1,12 +1,9 @@
 import 'dart:ui';
 
-import 'package:dringo/domain/secure_storage.dart';
-import 'package:dringo/domain/user.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/register.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/util/colors_palette.dart';
-import 'package:dringo/util/shared_preference.dart';
 import 'package:dringo/util/validators.dart';
 import 'package:dringo/util/widgets.dart';
 import 'package:dringo/widgets/app_divider.dart';
@@ -24,7 +21,7 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login>{
+class _LoginState extends State<Login> {
   final formKey = new GlobalKey<FormState>();
 
   String _username, _password;
@@ -34,6 +31,7 @@ class _LoginState extends State<Login>{
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final usernameField = TextFormField(
+      cursorColor: Colors.white,
       style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       validator: validateEmail,
@@ -42,6 +40,7 @@ class _LoginState extends State<Login>{
     );
 
     final passwordField = TextFormField(
+      cursorColor: Colors.white,
       style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       obscureText: true,
@@ -57,7 +56,8 @@ class _LoginState extends State<Login>{
           padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 0),
           child: CircularProgressIndicator(),
         ),
-        Text(" Authenticating... Please wait", style: TextStyle(color: Colors.white))
+        Text(" Authenticating... Please wait",
+            style: TextStyle(color: Colors.white))
       ],
     );
 
@@ -102,14 +102,13 @@ class _LoginState extends State<Login>{
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-
         body: Container(
-            constraints:BoxConstraints.expand(),
+          constraints: BoxConstraints.expand(),
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Color(ColorsPalette.secondaryColor), Color(ColorsPalette.primaryColor) ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight)),
+              gradient: LinearGradient(colors: [
+            Color(ColorsPalette.secondaryColor),
+            Color(ColorsPalette.primaryColor)
+          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
@@ -146,7 +145,8 @@ class _LoginState extends State<Login>{
                                 borderRadius: new BorderRadius.circular(50.0)),
                             child: Text(
                               'Sign in'.toUpperCase(),
-                              style: TextStyle(fontSize: 18.0, color:Colors.indigoAccent),
+                              style: TextStyle(
+                                  fontSize: 18.0, color: Colors.indigoAccent),
                             ),
                             onPressed: doLogin,
                           ),

@@ -11,13 +11,11 @@ class SocialSignIn extends StatelessWidget {
       child: Container(
         height: 60,
         width: 60,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(180.0), color: Colors.white),
-        child: IconButton(
-            iconSize: 36.0,
-            icon: FaIcon(
+        child: FlatButton(
+            child: FaIcon(
               FontAwesomeIcons.facebookF,
-              color: Colors.blue[700],
+              color: Colors.indigo,
+              size: 36.0,
             ),
             onPressed: () async {
               var token =
@@ -36,17 +34,16 @@ class SocialSignIn extends StatelessWidget {
       child: Container(
         height: 60,
         width: 60,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(180.0), color: Colors.white),
-        child: IconButton(
-            iconSize: 36.0,
-            icon: FaIcon(
+        child: FlatButton(
+            child: FaIcon(
               FontAwesomeIcons.google,
-              color: Colors.red[700],
+              color: Colors.redAccent,
+              size: 36.0,
             ),
             onPressed: () async {
               var token =
-                  Provider.of<AuthProvider>(context, listen: false).google();
+                  await Provider.of<AuthProvider>(context, listen: false)
+                      .google();
               if (token != null)
                 Navigator.of(context).pushNamed(DashBoard.routeName);
             }),

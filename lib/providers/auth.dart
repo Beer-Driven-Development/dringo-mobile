@@ -98,6 +98,7 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
       final String token = response.body;
       setSecureStorage("token", token);
       _loggedInStatus = Status.LoggedIn;
+      notifyListeners();
       return token;
     }
     return null;
