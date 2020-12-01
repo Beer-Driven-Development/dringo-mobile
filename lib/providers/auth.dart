@@ -66,8 +66,25 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
 
   Future<String> facebook() async {
     var accessToken = await FacebookAuth.instance.login();
-    print(accessToken);
-    return accessToken.toString();
+    var userData = await FacebookAuth.instance.getUserData();
+    final Map<String, dynamic> loginData = {
+      'email': userData['email'],
+    };
+    _loggedInStatus = Status.Authenticating;
+    notifyListeners();
+    if (accessToken != null) {
+      Response response = await post(
+        AppUrl.facebook,
+        body: json.encode(loginData),
+        headers: {'Content-Type': 'application/json'},
+      );
+      final String token = response.body;
+      setSecureStorage("token", token);
+      _loggedInStatus = Status.LoggedIn;
+      notifyListeners();
+      return token;
+    }
+    return null;
   }
 
   Future<String> google() async {
