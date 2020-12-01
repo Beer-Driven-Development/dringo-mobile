@@ -150,10 +150,15 @@ class _DashBoardState extends State<DashBoard> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.white70,
       drawer: AppDrawer(),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.fromLTRB(0,0,15.0,60.0),
-        child: FloatingActionButton(child: Icon( Icons.add), onPressed:(){Navigator.pushNamed(context, CreateRoomNamePasscode.routeName);} ),
+        padding: const EdgeInsets.fromLTRB(0, 0, 15.0, 60.0),
+        child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              Navigator.pushNamed(context, CreateRoomNamePasscode.routeName);
+            }),
       ),
       body: _isLoading
           ? Center(

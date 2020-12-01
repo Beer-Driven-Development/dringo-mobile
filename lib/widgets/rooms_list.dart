@@ -4,13 +4,13 @@ import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/pages/room.dart' as RoomPage;
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/services/socket_service.dart';
-import 'package:dringo/util/shared_preference.dart';
+import 'package:dringo/widgets/room_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
 
-class RoomsList extends StatelessWidget with SecureStorageMixin{
+class RoomsList extends StatelessWidget with SecureStorageMixin {
   RoomsList();
 
   @override
@@ -69,27 +69,13 @@ class RoomsList extends StatelessWidget with SecureStorageMixin{
         contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         title: Text(
           room.name,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
-        trailing:
-            Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
         onTap: () async {
           await _asyncInputDialog(context, room.id);
         });
 
-    Card makeCard(Room room) => Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(100.0))),
-          elevation: 8.0,
-          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: new BorderRadius.all(new Radius.circular(100.0)),
-            ),
-            child: makeListTile(room),
-          ),
-        );
+    RoomItem makeCard(Room room) => RoomItem(room: room);
 
     final makeBody = Container(
       child: ListView.builder(
@@ -98,7 +84,11 @@ class RoomsList extends StatelessWidget with SecureStorageMixin{
         itemCount: rooms.length,
         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
           value: rooms[i],
-          child: makeCard(rooms[i]),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: makeCard(rooms[i]),
+          ),
         ),
       ),
     );
