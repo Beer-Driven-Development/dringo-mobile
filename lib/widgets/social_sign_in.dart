@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SocialSignIn extends StatelessWidget {
-  Widget _facebookButton() {
+  Widget _facebookButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -19,7 +19,13 @@ class SocialSignIn extends StatelessWidget {
               FontAwesomeIcons.facebookF,
               color: Colors.blue[700],
             ),
-            onPressed: null),
+            onPressed: () async {
+              var token =
+                  await Provider.of<AuthProvider>(context, listen: false)
+                      .facebook();
+              if (token != null)
+                Navigator.of(context).pushNamed(DashBoard.routeName);
+            }),
       ),
     );
   }
@@ -54,7 +60,7 @@ class SocialSignIn extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          _facebookButton(),
+          _facebookButton(context),
           _googleButton(context),
         ],
       ),

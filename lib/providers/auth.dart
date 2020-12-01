@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/util/app_url.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 
@@ -61,6 +62,12 @@ class AuthProvider with ChangeNotifier, SecureStorageMixin {
       };
     }
     return result;
+  }
+
+  Future<String> facebook() async {
+    var accessToken = await FacebookAuth.instance.login();
+    print(accessToken);
+    return accessToken.toString();
   }
 
   Future<String> google() async {
