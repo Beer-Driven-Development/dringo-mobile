@@ -1,21 +1,12 @@
-import 'package:dringo/domain/category.dart';
-import 'package:dringo/domain/user.dart';
 import 'package:dringo/pages/create_room/create_room_categories.dart';
-import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/providers/auth.dart';
 import 'package:dringo/providers/category_provider.dart';
 import 'package:dringo/providers/room_provider.dart';
-import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/util/colors_palette.dart';
-import 'package:dringo/util/shared_preference.dart';
-import 'package:dringo/util/validators.dart';
 import 'package:dringo/util/widgets.dart';
-import 'package:dringo/widgets/app_divider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../room.dart';
 
 class CreateRoomNamePasscode extends StatefulWidget {
   static const routeName = '/create-room-1';
@@ -40,6 +31,7 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final nameField = TextFormField(
+      cursorColor: Colors.white,
       style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       validator: (value) => value.isEmpty ? "Please enter name of room" : null,
@@ -48,6 +40,7 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
     );
 
     final passcodeField = TextFormField(
+      cursorColor: Colors.white,
       style: TextStyle(fontSize: 18.0, color: Colors.white),
       autofocus: false,
       obscureText: true,
@@ -113,7 +106,7 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
                       onPressed: () async {
                         var room;
                         try {
-                          room =  await Provider.of<RoomProvider>(context,
+                          room = await Provider.of<RoomProvider>(context,
                                   listen: false)
                               .createRoom(_name, _passcode);
                         } catch (error) {
@@ -121,7 +114,8 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
                         }
 
                         Navigator.pushNamed(
-                            context, CreateRoomCategories.routeName, arguments: room.id);
+                            context, CreateRoomCategories.routeName,
+                            arguments: room.id);
                       },
                     ),
                   ),

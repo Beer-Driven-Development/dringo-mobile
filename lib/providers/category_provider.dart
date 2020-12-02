@@ -4,7 +4,6 @@ import 'package:dringo/domain/category.dart';
 import 'package:dringo/domain/pivot.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/util/app_url.dart';
-import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -18,6 +17,10 @@ class CategoryProvider with ChangeNotifier, SecureStorageMixin {
 
   List<Pivot> get pivots {
     return [..._pivots];
+  }
+
+  deletePivots() {
+    _pivots = [];
   }
 
   Future<void> getAll() async {
@@ -68,17 +71,19 @@ class CategoryProvider with ChangeNotifier, SecureStorageMixin {
     }
   }
 
-  Future<void> deletePivot(int roomId, int pivotId ) async {
+  Future<void> deletePivot(int roomId, int pivotId) async {
     final token = await getSecureStorage("token");
 
-
-    final response =
-    await delete(AppUrl.rooms + '/' + roomId.toString() + '/categories/'+ pivotId.toString(),
+    final response = await delete(
+        AppUrl.rooms +
+            '/' +
+            roomId.toString() +
+            '/categories/' +
+            pivotId.toString(),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token,
         });
-
 
     if (response.statusCode == 200) {
       var pivot = _pivots.firstWhere((pivot) => pivot.id == pivotId);
@@ -88,8 +93,4 @@ class CategoryProvider with ChangeNotifier, SecureStorageMixin {
       notifyListeners();
     }
   }
-
-
-
-
 }

@@ -1,6 +1,7 @@
 import 'package:dringo/domain/category.dart';
 import 'package:dringo/domain/pivot.dart';
 import 'package:dringo/domain/value_object.dart';
+import 'package:dringo/pages/create_room/create_room_beers.dart';
 import 'package:dringo/providers/category_provider.dart';
 import 'package:dringo/util/colors_palette.dart';
 import 'package:flushbar/flushbar.dart';
@@ -56,9 +57,7 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
   void initState() {
     _isButtonDisabled = true;
     categories =
-        Provider
-            .of<CategoryProvider>(context, listen: false)
-            .categories;
+        Provider.of<CategoryProvider>(context, listen: false).categories;
     _dropdownMenuItems = buildDropDownMenuItems(categories);
     _selectedCategory = _dropdownMenuItems[0].value;
     _dropdownMenuItemsValueObject =
@@ -71,10 +70,7 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      roomId = ModalRoute
-          .of(context)
-          .settings
-          .arguments as int;
+      roomId = ModalRoute.of(context).settings.arguments as int;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -109,9 +105,11 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
 
   @override
   Widget build(BuildContext context) {
-    pivots = Provider
-        .of<CategoryProvider>(context, listen: true)
-        .pivots ?? [];
+    pivots = Provider.of<CategoryProvider>(context, listen: true)
+            .pivots
+            .where((pivot) => pivot.room.id == roomId)
+            .toList() ??
+        [];
     var createRoom = () {
       final form = formKey.currentState;
       if (form.validate()) {
@@ -125,170 +123,176 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
       }
     };
 
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          constraints: BoxConstraints.expand(),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                Color(ColorsPalette.secondaryColor),
-                Color(ColorsPalette.primaryColor)
-              ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-          padding: EdgeInsets.all(40.0),
-          child: Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: Column(
+    return WillPopScope(
+      onWillPop: () async {
+        pivots = [];
+        Provider.of<CategoryProvider>(context, listen: false).deletePivots();
+        Navigator.pop(context);
+        return true;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            constraints: BoxConstraints.expand(),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+              Color(ColorsPalette.secondaryColor),
+              Color(ColorsPalette.primaryColor)
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+            padding: EdgeInsets.all(40.0),
+            child: Form(
+              key: formKey,
+              child: SingleChildScrollView(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   //Center Column contents vertically,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                  SizedBox(height: 135.0),
-              Text(
-                'Choose category and weight',
-                style: TextStyle(
-                    fontSize: 26.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontFamily: 'Playfair Display'),
-              ),
-              SizedBox(height: 30.0),
-              Row(
-                mainAxisSize: MainAxisSize.min, // see 3
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButton<Category>(
-                          isExpanded: true,
-                          value: _selectedCategory,
-                          selectedItemBuilder: (BuildContext context) {
-                            return categories
-                                .map<Widget>((Category category) {
-                              return Text(
-                                category.name,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(color: Colors.white),
-                                softWrap: true,
-                              );
-                            }).toList();
-                          },
-                          items: _dropdownMenuItems,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedCategory = value;
-                            });
-                          }),
+                    SizedBox(height: 135.0),
+                    Text(
+                      'Choose category and weight',
+                      style: TextStyle(
+                          fontSize: 26.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'Playfair Display'),
                     ),
-                  ),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButton<ValueObject>(
-                          value: _selectedValueObject,
-                          selectedItemBuilder: (BuildContext context) {
-                            return _dropdownItems
-                                .map<Widget>((ValueObject vo) {
-                              return Text(
-                                vo.value,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(color: Colors.white),
-                                softWrap: false,
-                              );
-                            }).toList();
-                          },
-                          items: _dropdownMenuItemsValueObject,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedValueObject = value;
-                            });
-                          }),
-                    ),
-                  ),
-                  Flexible(
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IconButton(
-                            icon: Icon(Icons.add),
-                            color: Colors.white,
-                            onPressed: () {
-                              _addCategory(roomId, _selectedCategory.id,
-                                  _selectedValueObject.id);
-
-                            }
-                        ))
-                  )],
-                  ),
-                  Consumer<CategoryProvider>(
-                    builder: (context, pivotProvider, child) {
-                      return SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            for (Pivot pivot in pivotProvider.pivots)
-                              Center(
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        pivot.category.name,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18.0),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        pivot.weight.toString(),
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18.0),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: IconButton(
-                                          icon: Icon(Icons.delete_forever),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            _deletePivot(roomId, pivot.id);
-
-                                          }),
-                                    )
-                                  ],
-                                ),
-                              )
-                          ],
+                    SizedBox(height: 30.0),
+                    Row(
+                      mainAxisSize: MainAxisSize.min, // see 3
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DropdownButton<Category>(
+                                isExpanded: true,
+                                value: _selectedCategory,
+                                selectedItemBuilder: (BuildContext context) {
+                                  return categories
+                                      .map<Widget>((Category category) {
+                                    return Text(
+                                      category.name,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(color: Colors.white),
+                                      softWrap: true,
+                                    );
+                                  }).toList();
+                                },
+                                items: _dropdownMenuItems,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedCategory = value;
+                                  });
+                                }),
+                          ),
                         ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 120.0),
-                  Center(
-                    child: RaisedButton(
-
-                      elevation: 10,
-                      color: Colors.white,
-                      padding:
-                      EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(50.0)),
-                      child: Text('Next'.toUpperCase(),
-                          style: TextStyle(
-                              fontSize: 18.0, color: Colors.indigoAccent)),
-                      onPressed: pivots.isEmpty ? null : () => createRoom,
-
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DropdownButton<ValueObject>(
+                                value: _selectedValueObject,
+                                selectedItemBuilder: (BuildContext context) {
+                                  return _dropdownItems
+                                      .map<Widget>((ValueObject vo) {
+                                    return Text(
+                                      vo.value,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(color: Colors.white),
+                                      softWrap: false,
+                                    );
+                                  }).toList();
+                                },
+                                items: _dropdownMenuItemsValueObject,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedValueObject = value;
+                                  });
+                                }),
+                          ),
+                        ),
+                        Flexible(
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: IconButton(
+                                    icon: Icon(Icons.add),
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      _addCategory(roomId, _selectedCategory.id,
+                                          _selectedValueObject.id);
+                                    })))
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 30.0),
-                ],
+                    Consumer<CategoryProvider>(
+                      builder: (context, pivotProvider, child) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              for (Pivot pivot in pivotProvider.pivots)
+                                Center(
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          pivot.category.name,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.0),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          pivot.weight.toString(),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.0),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: IconButton(
+                                            icon: Icon(Icons.delete_forever),
+                                            color: Colors.white,
+                                            onPressed: () {
+                                              _deletePivot(roomId, pivot.id);
+                                            }),
+                                      )
+                                    ],
+                                  ),
+                                )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 120.0),
+                    Center(
+                      child: RaisedButton(
+                          elevation: 10,
+                          color: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 50),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(50.0)),
+                          child: Text('Next'.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 18.0, color: Colors.indigoAccent)),
+                          onPressed: pivots.isEmpty
+                              ? null
+                              : () => Navigator.pushNamed(
+                                  context, CreateRoomBeers.routeName,
+                                  arguments: roomId)),
+                    ),
+                    SizedBox(height: 30.0),
+                  ],
+                ),
               ),
             ),
           ),

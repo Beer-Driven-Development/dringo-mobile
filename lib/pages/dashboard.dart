@@ -155,6 +155,7 @@ class _DashBoardState extends State<DashBoard> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 15.0, 60.0),
         child: FloatingActionButton(
+            backgroundColor: Colors.indigo,
             child: Icon(Icons.add),
             onPressed: () {
               Navigator.pushNamed(context, CreateRoomNamePasscode.routeName);

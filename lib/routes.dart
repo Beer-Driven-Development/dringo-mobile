@@ -1,3 +1,4 @@
+import 'package:dringo/pages/create_room/create_room_beers.dart';
 import 'package:dringo/pages/create_room/create_room_categories.dart';
 import 'package:dringo/pages/create_room/create_room_name_passcode.dart';
 import 'package:dringo/pages/dashboard.dart';
@@ -10,6 +11,7 @@ final routes = {
   Login.routeName: (ctx) => Login(),
   Register.routeName: (ctx) => Register(),
   Room.routeName: (ctx) => Room(),
-  CreateRoomNamePasscode.routeName: (ctx) =>CreateRoomNamePasscode(),
-  CreateRoomCategories.routeName: (ctx) =>CreateRoomCategories(),
+  CreateRoomNamePasscode.routeName: (ctx) => CreateRoomNamePasscode(),
+  CreateRoomCategories.routeName: (ctx) => CreateRoomCategories(),
+  CreateRoomBeers.routeName: (ctx) => CreateRoomBeers(),
 };

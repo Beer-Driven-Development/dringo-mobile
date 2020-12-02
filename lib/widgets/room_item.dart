@@ -39,7 +39,7 @@ class RoomItem extends StatelessWidget {
                     color: Colors.indigo,
                   ),
                   child: Icon(
-                    Icons.local_drink,
+                    Icons.sports_bar_sharp,
                     color: Colors.white,
                   ),
                 ),
