@@ -10,8 +10,18 @@ import 'package:provider/provider.dart';
 
 import '../main.dart';
 
-class RoomsList extends StatelessWidget with SecureStorageMixin {
+class RoomsList extends StatefulWidget {
   RoomsList();
+
+  @override
+  _RoomsListState createState() => _RoomsListState();
+}
+
+class _RoomsListState extends State<RoomsList> with SecureStorageMixin {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,16 +88,22 @@ class RoomsList extends StatelessWidget with SecureStorageMixin {
     RoomItem makeCard(Room room) => RoomItem(room: room);
 
     final makeBody = Container(
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: rooms.length,
-        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-          value: rooms[i],
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: makeCard(rooms[i]),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await Provider.of<RoomProvider>(context, listen: false).getAll();
+          return Provider.of<RoomProvider>(context, listen: false).rooms;
+        },
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: rooms.length,
+          itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+            value: rooms[i],
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: makeCard(rooms[i]),
+            ),
           ),
         ),
       ),
