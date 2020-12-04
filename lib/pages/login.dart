@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/register.dart';
 import 'package:dringo/providers/user_provider.dart';
-import 'package:dringo/util/colors_palette.dart';
 import 'package:dringo/util/validators.dart';
 import 'package:dringo/util/widgets.dart';
 import 'package:dringo/widgets/app_divider.dart';
@@ -31,8 +30,8 @@ class _LoginState extends State<Login> {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final usernameField = TextFormField(
-      cursorColor: Colors.white,
-      style: TextStyle(fontSize: 18.0, color: Colors.white),
+      cursorColor: Colors.indigo,
+      style: TextStyle(fontSize: 18.0, color: Colors.black87),
       autofocus: false,
       validator: validateEmail,
       onSaved: (value) => _username = value,
@@ -40,8 +39,8 @@ class _LoginState extends State<Login> {
     );
 
     final passwordField = TextFormField(
-      cursorColor: Colors.white,
-      style: TextStyle(fontSize: 18.0, color: Colors.white),
+      cursorColor: Colors.indigo,
+      style: TextStyle(fontSize: 18.0, color: Colors.black87),
       autofocus: false,
       obscureText: true,
       validator: (value) => value.isEmpty ? "Please enter password" : null,
@@ -54,17 +53,19 @@ class _LoginState extends State<Login> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 0),
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.indigo,
+          ),
         ),
         Text(" Authenticating... Please wait",
-            style: TextStyle(color: Colors.white))
+            style: TextStyle(color: Colors.indigo))
       ],
     );
 
     var signUpLabel = Center(
       child: FlatButton(
         child: Text("No account? Sign up instead!",
-            style: TextStyle(fontSize: 18.0, color: Colors.white)),
+            style: TextStyle(fontSize: 18.0, color: Colors.indigo)),
         onPressed: () {
           Navigator.pushReplacementNamed(context, Register.routeName);
         },
@@ -101,14 +102,9 @@ class _LoginState extends State<Login> {
     // SystemChrome.setEnabledSystemUIOverlays([]);
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[200],
         body: Container(
           constraints: BoxConstraints.expand(),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-            Color(ColorsPalette.secondaryColor),
-            Color(ColorsPalette.primaryColor)
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
@@ -123,7 +119,7 @@ class _LoginState extends State<Login> {
                       style: TextStyle(
                           fontFamily: 'Playfair Display',
                           fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                          color: Colors.indigo,
                           fontSize: 64.0,
                           letterSpacing: 1.2),
                     ),

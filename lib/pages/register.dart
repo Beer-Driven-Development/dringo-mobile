@@ -1,7 +1,6 @@
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/providers/user_provider.dart';
-import 'package:dringo/util/colors_palette.dart';
 import 'package:dringo/util/validators.dart';
 import 'package:dringo/util/widgets.dart';
 import 'package:dringo/widgets/app_divider.dart';
@@ -29,8 +28,8 @@ class _RegisterState extends State<Register> with SecureStorageMixin {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final emailField = TextFormField(
-      cursorColor: Colors.white,
-      style: TextStyle(fontSize: 18.0, color: Colors.white),
+      cursorColor: Colors.indigo,
+      style: TextStyle(fontSize: 18.0, color: Colors.black87),
       autofocus: false,
       validator: validateEmail,
       onSaved: (value) => _email = value,
@@ -38,8 +37,8 @@ class _RegisterState extends State<Register> with SecureStorageMixin {
     );
 
     final passwordField = TextFormField(
-      cursorColor: Colors.white,
-      style: TextStyle(fontSize: 18.0, color: Colors.white),
+      cursorColor: Colors.indigo,
+      style: TextStyle(fontSize: 18.0, color: Colors.black87),
       autofocus: false,
       obscureText: true,
       validator: (value) => value.isEmpty ? "Please enter password" : null,
@@ -48,8 +47,8 @@ class _RegisterState extends State<Register> with SecureStorageMixin {
     );
 
     final usernameField = TextFormField(
-      cursorColor: Colors.white,
-      style: TextStyle(fontSize: 18.0, color: Colors.white),
+      cursorColor: Colors.indigo,
+      style: TextStyle(fontSize: 18.0, color: Colors.black87),
       autofocus: false,
       validator: (value) => value.isEmpty ? "Username is required" : null,
       onSaved: (value) => _username = value,
@@ -59,7 +58,7 @@ class _RegisterState extends State<Register> with SecureStorageMixin {
     var signInLabel = Center(
       child: FlatButton(
         child: Text("Have an account? Sign in instead!",
-            style: TextStyle(fontSize: 18.0, color: Colors.white)),
+            style: TextStyle(fontSize: 18.0, color: Colors.indigo)),
         onPressed: () {
           Navigator.pushReplacementNamed(context, Login.routeName);
         },
@@ -69,9 +68,11 @@ class _RegisterState extends State<Register> with SecureStorageMixin {
     var loading = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        CircularProgressIndicator(),
+        CircularProgressIndicator(
+          backgroundColor: Colors.indigo,
+        ),
         Text(" Registering... Please wait",
-            style: TextStyle(color: Colors.white))
+            style: TextStyle(color: Colors.indigo))
       ],
     );
 
@@ -102,13 +103,9 @@ class _RegisterState extends State<Register> with SecureStorageMixin {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.grey[200],
         body: Container(
           constraints: BoxConstraints.expand(),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-            Color(ColorsPalette.secondaryColor),
-            Color(ColorsPalette.primaryColor)
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
@@ -121,7 +118,7 @@ class _RegisterState extends State<Register> with SecureStorageMixin {
                     'Fill this sign up form',
                     style: TextStyle(
                         fontSize: 32.0,
-                        color: Colors.white,
+                        color: Colors.indigo,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'Playfair Display'),
                   ),

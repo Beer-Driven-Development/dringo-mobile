@@ -1,8 +1,7 @@
 import 'package:dringo/domain/beer.dart';
 import 'package:dringo/providers/beer_provider.dart';
-import 'package:dringo/util/colors_palette.dart';
+import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/util/widgets.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +14,7 @@ class CreateRoomBeers extends StatefulWidget {
 
 class _CreateRoomBeersState extends State<CreateRoomBeers> {
   final formKey = new GlobalKey<FormState>();
-  var beers;
+  List<Beer> beers;
   String _beerName;
   double _beerAbv;
   int roomId;
@@ -24,6 +23,7 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
 
   _addBeer(Beer beer) {
     Provider.of<BeerProvider>(context, listen: false).addBeer(beer);
+    beers = Provider.of<BeerProvider>(context, listen: false).beers;
     setState(() {
       _isButtonDisabled = false;
     });
@@ -31,6 +31,7 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
 
   _deleteBeer(Beer beer) {
     Provider.of<BeerProvider>(context, listen: false).deleteBeer(beer);
+    beers.remove(beer);
     if (beers.isEmpty) {
       setState(() {
         _isButtonDisabled = true;
@@ -57,28 +58,11 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
 
   @override
   Widget build(BuildContext context) {
-    var createRoom = () {
-      final form = formKey.currentState;
-      if (form.validate()) {
-        form.save();
-      } else {
-        Flushbar(
-          title: "Invalid form",
-          message: "Please Complete the form properly",
-          duration: Duration(seconds: 10),
-        ).show(context);
-      }
-    };
-
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.grey[200],
         body: Container(
           constraints: BoxConstraints.expand(),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-            Color(ColorsPalette.secondaryColor),
-            Color(ColorsPalette.primaryColor)
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
@@ -88,26 +72,21 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
                 //Center Column contents vertically,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 135.0),
+                  SizedBox(height: 75.0),
                   Text(
                     'Add beer',
                     style: TextStyle(
                         fontSize: 26.0,
-                        color: Colors.white,
+                        color: Colors.indigo,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'Playfair Display'),
                   ),
-                  SizedBox(height: 30.0),
-                  Row(
-                    mainAxisSize: MainAxisSize.min, // see 3
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [],
-                  ),
+                  SizedBox(height: 50.0),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      cursorColor: Colors.white,
-                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+                      cursorColor: Colors.indigo,
+                      style: TextStyle(fontSize: 18.0, color: Colors.indigo),
                       autofocus: false,
                       validator: (value) =>
                           value.isEmpty ? "Please enter name of beer" : null,
@@ -120,13 +99,13 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       keyboardType: TextInputType.number,
-                      cursorColor: Colors.white,
-                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+                      cursorColor: Colors.indigo,
+                      style: TextStyle(fontSize: 18.0, color: Colors.indigo),
                       autofocus: false,
-                      validator: (value) =>
-                          (value as double > 0 && value as double < 100)
-                              ? "Please enter valid abv of beer"
-                              : null,
+                      validator: (value) => (double.parse(value) >= 0 &&
+                              double.parse(value) < 100)
+                          ? "Please enter valid abv of beer"
+                          : null,
                       onChanged: (value) => _beerAbv = double.parse(value),
                       decoration: buildInputDecoration(
                           "Alcohol by value", Icons.sports_bar_sharp),
@@ -134,7 +113,7 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
                   ),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: RaisedButton(
                         elevation: 10,
                         color: Colors.white,
@@ -148,78 +127,117 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
                         onPressed: () {
                           var beer = new Beer(
                               name: _beerName, abv: _beerAbv, roomId: roomId);
-
-                          Provider.of<BeerProvider>(context, listen: false)
-                              .addBeer(beer);
+                          _addBeer(beer);
                         },
                       ),
                     ),
                   ),
                   Consumer<BeerProvider>(
                     builder: (context, beerProvider, child) {
-                      return SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            for (Beer beer in beerProvider.beers)
-                              Center(
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        beer.name,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18.0),
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 200,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: beers.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          beers[index].name,
+                                          style: TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 22.0),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        beer.abv.toString() + '%',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18.0),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          beers[index].abv.toString() + '%',
+                                          style: TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 22.0),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: IconButton(
-                                          icon: Icon(Icons.delete_forever),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            _deleteBeer(beer);
-                                          }),
-                                    )
-                                  ],
-                                ),
-                              )
-                          ],
-                        ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(0.0),
+                                        child: IconButton(
+                                            iconSize: 26.0,
+                                            icon: Icon(Icons.delete_forever),
+                                            color: Colors.redAccent,
+                                            onPressed: () {
+                                              _deleteBeer(beers[index]);
+                                            }),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        ],
                       );
                     },
                   ),
-                  SizedBox(height: 200.0),
-                  Center(
-                    child: RaisedButton(
-                      elevation: 10,
-                      color: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(50.0)),
-                      child: Text('Next'.toUpperCase(),
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: _isButtonDisabled
-                                  ? Colors.white70
-                                  : Colors.indigoAccent)),
-                      onPressed: beers.isEmpty ? null : () => createRoom,
-                    ),
-                  ),
+                  SizedBox(height: 50.0),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        RaisedButton(
+                          elevation: 10,
+                          color: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 50),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(50.0)),
+                          child: Text('Draft'.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: _isButtonDisabled
+                                      ? Colors.white
+                                      : Colors.indigoAccent)),
+                          onPressed: _isButtonDisabled
+                              ? null
+                              : () => {
+                                    Navigator.popUntil(context, (route) {
+                                      return route.isFirst;
+                                    })
+                                  },
+                        ),
+                        RaisedButton(
+                          elevation: 10,
+                          color: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 50),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(50.0)),
+                          child: Text('Publish'.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: _isButtonDisabled
+                                      ? Colors.white
+                                      : Colors.indigoAccent)),
+                          onPressed: _isButtonDisabled
+                              ? null
+                              : () async => {
+                                    await Provider.of<RoomProvider>(context,
+                                            listen: false)
+                                        .changeStatus(roomId),
+                                    Navigator.pop(context),
+                                    Navigator.pop(context),
+                                    Navigator.pop(context),
+                                  },
+                        ),
+                      ]),
                   SizedBox(height: 30.0),
                 ],
               ),

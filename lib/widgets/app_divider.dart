@@ -13,23 +13,17 @@ class AppDivider extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: 1,
-                color: Colors.white
-              ),
+              child: Divider(thickness: 1, color: Colors.indigoAccent),
             ),
           ),
           Text(
             'or',
-            style: TextStyle(color: Colors.white, fontSize: 18.0),
+            style: TextStyle(color: Colors.indigoAccent, fontSize: 18.0),
           ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: 1,
-                  color: Colors.white
-              ),
+              child: Divider(thickness: 1, color: Colors.indigoAccent),
             ),
           ),
           SizedBox(

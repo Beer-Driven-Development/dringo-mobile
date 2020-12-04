@@ -14,7 +14,7 @@ class SocialSignIn extends StatelessWidget {
         child: FlatButton(
             child: FaIcon(
               FontAwesomeIcons.facebookF,
-              color: Colors.indigo,
+              color: Colors.blue[800],
               size: 36.0,
             ),
             onPressed: () async {

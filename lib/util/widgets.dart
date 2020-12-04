@@ -4,15 +4,16 @@ label(String title) => Text(title);
 
 InputDecoration buildInputDecoration(String hintText, IconData icon) {
   return InputDecoration(
-    errorStyle: TextStyle(fontSize: 14.0, color: Colors.white),
-    labelStyle: TextStyle(color: Colors.white),
+    errorStyle: TextStyle(fontSize: 14.0, color: Colors.red[900]),
+    labelStyle: TextStyle(color: Colors.indigo),
     labelText: hintText,
-    prefixIcon: Icon(icon, color: Colors.white),
+    prefixIcon: Icon(icon, color: Colors.indigo),
+    filled: true,
+    fillColor: Colors.white,
     // hintText: hintText,
     contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
     enabledBorder: OutlineInputBorder(
-      borderSide:
-          BorderSide(color: Colors.white, width: 1.4),
+      borderSide: BorderSide(color: Colors.white, width: 1.4),
       borderRadius: BorderRadius.circular(100.0),
     ),
     errorBorder: OutlineInputBorder(
@@ -20,7 +21,7 @@ InputDecoration buildInputDecoration(String hintText, IconData icon) {
       borderRadius: BorderRadius.circular(100.0),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.white, width: 1.4),
+      borderSide: BorderSide(color: Colors.indigo, width: 1.4),
       borderRadius: BorderRadius.circular(100.0),
     ),
     border: OutlineInputBorder(

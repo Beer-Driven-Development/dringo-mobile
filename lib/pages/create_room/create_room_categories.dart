@@ -3,7 +3,6 @@ import 'package:dringo/domain/pivot.dart';
 import 'package:dringo/domain/value_object.dart';
 import 'package:dringo/pages/create_room/create_room_beers.dart';
 import 'package:dringo/providers/category_provider.dart';
-import 'package:dringo/util/colors_palette.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,6 +54,7 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
 
   @override
   void initState() {
+    pivots = [];
     _isButtonDisabled = true;
     categories =
         Provider.of<CategoryProvider>(context, listen: false).categories;
@@ -132,13 +132,9 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
       },
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.grey[200],
           body: Container(
             constraints: BoxConstraints.expand(),
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-              Color(ColorsPalette.secondaryColor),
-              Color(ColorsPalette.primaryColor)
-            ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
             padding: EdgeInsets.all(40.0),
             child: Form(
               key: formKey,
@@ -148,12 +144,12 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                   //Center Column contents vertically,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 135.0),
+                    SizedBox(height: 100.0),
                     Text(
                       'Choose category and weight',
                       style: TextStyle(
                           fontSize: 26.0,
-                          color: Colors.white,
+                          color: Colors.indigo,
                           fontWeight: FontWeight.w900,
                           fontFamily: 'Playfair Display'),
                     ),
@@ -175,7 +171,7 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                                       category.name,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.indigo),
                                       softWrap: true,
                                     );
                                   }).toList();
@@ -200,7 +196,7 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                                       vo.value,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.indigo),
                                       softWrap: false,
                                     );
                                   }).toList();
@@ -218,7 +214,7 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: IconButton(
                                     icon: Icon(Icons.add),
-                                    color: Colors.white,
+                                    color: Colors.indigo,
                                     onPressed: () {
                                       _addCategory(roomId, _selectedCategory.id,
                                           _selectedValueObject.id);
@@ -238,28 +234,29 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                                   child: Row(
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(4.0),
                                         child: Text(
                                           pivot.category.name,
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black87,
                                               fontSize: 18.0),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(4.0),
                                         child: Text(
                                           pivot.weight.toString(),
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black87,
                                               fontSize: 18.0),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(4.0),
                                         child: IconButton(
+                                            iconSize: 26,
                                             icon: Icon(Icons.delete_forever),
-                                            color: Colors.white,
+                                            color: Colors.redAccent,
                                             onPressed: () {
                                               _deletePivot(roomId, pivot.id);
                                             }),
@@ -272,7 +269,7 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                         );
                       },
                     ),
-                    SizedBox(height: 120.0),
+                    SizedBox(height: 100.0),
                     Center(
                       child: RaisedButton(
                           elevation: 10,
@@ -283,7 +280,10 @@ class _CreateRoomCategoriesState extends State<CreateRoomCategories> {
                               borderRadius: new BorderRadius.circular(50.0)),
                           child: Text('Next'.toUpperCase(),
                               style: TextStyle(
-                                  fontSize: 18.0, color: Colors.indigoAccent)),
+                                  fontSize: 18.0,
+                                  color: pivots.isEmpty
+                                      ? Colors.white
+                                      : Colors.indigo)),
                           onPressed: pivots.isEmpty
                               ? null
                               : () => Navigator.pushNamed(

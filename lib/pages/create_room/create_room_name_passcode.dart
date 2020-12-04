@@ -2,7 +2,6 @@ import 'package:dringo/pages/create_room/create_room_categories.dart';
 import 'package:dringo/providers/auth.dart';
 import 'package:dringo/providers/category_provider.dart';
 import 'package:dringo/providers/room_provider.dart';
-import 'package:dringo/util/colors_palette.dart';
 import 'package:dringo/util/widgets.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +30,8 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final nameField = TextFormField(
-      cursorColor: Colors.white,
-      style: TextStyle(fontSize: 18.0, color: Colors.white),
+      cursorColor: Colors.indigo,
+      style: TextStyle(fontSize: 18.0, color: Colors.black54),
       autofocus: false,
       validator: (value) => value.isEmpty ? "Please enter name of room" : null,
       onChanged: (value) => _name = value,
@@ -40,13 +39,13 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
     );
 
     final passcodeField = TextFormField(
-      cursorColor: Colors.white,
-      style: TextStyle(fontSize: 18.0, color: Colors.white),
+      cursorColor: Colors.indigo,
+      style: TextStyle(fontSize: 18.0, color: Colors.black54),
       autofocus: false,
       obscureText: true,
       validator: (value) => value.isEmpty ? "Please enter passcode" : null,
       onChanged: (value) => _passcode = value,
-      decoration: buildInputDecoration("Passcode", Icons.lock),
+      decoration: buildInputDecoration('Passcode', Icons.lock),
     );
 
     var createRoom = () {
@@ -64,13 +63,9 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.grey[200],
         body: Container(
           constraints: BoxConstraints.expand(),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-            Color(ColorsPalette.secondaryColor),
-            Color(ColorsPalette.primaryColor)
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
@@ -83,7 +78,7 @@ class _CreateRoomNamePasscodeState extends State<CreateRoomNamePasscode> {
                     'Create room',
                     style: TextStyle(
                         fontSize: 32.0,
-                        color: Colors.white,
+                        color: Colors.indigo,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'Playfair Display'),
                   ),

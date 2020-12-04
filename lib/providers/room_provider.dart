@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dringo/domain/room.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/util/app_url.dart';
-import 'package:dringo/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -44,6 +43,20 @@ class RoomProvider with ChangeNotifier, SecureStorageMixin {
 
   Room findById(int id) {
     return _rooms.firstWhere((room) => room.id == id);
+  }
+
+  Future<void> changeStatus(int id) async {
+    final token = await getSecureStorage("token");
+
+    final response = await post(
+      AppUrl.rooms + '/' + id.toString(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      },
+    );
+
+    notifyListeners();
   }
 
   Future<Room> createRoom(String name, String passcode) async {
