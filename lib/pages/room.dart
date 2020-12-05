@@ -49,14 +49,18 @@ class _RoomState extends State<Room> with SecureStorageMixin{
           },
           child: Scaffold(
             body: Container(
-              child: Column(children: [
-                SizedBox(height: 70.0),
-                Text(
-                  room.name,
-                  style: TextStyle(fontSize: 24.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 70.0),
+                Center(
+                  child: Text(
+                    room.name,
+                    style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700, color: Colors.indigo),
+                  ),
                 ),
                 SizedBox(height: 70.0),
-                for (var participant in participants) Text(participant)
+                for (var participant in participants) Text(participant, style: TextStyle(fontSize: 16.0),)
               ]),
             ),
           ),
