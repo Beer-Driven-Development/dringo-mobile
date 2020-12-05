@@ -1,30 +1,30 @@
 class User {
-  int userId;
-  String name;
+  int id;
+  String username;
   String email;
-  String phone;
-  String type;
   String token;
-  String renewalToken;
 
   User(
-      {this.userId,
-      this.name,
+      {this.id,
+      this.username,
       this.email,
-      this.phone,
-      this.type,
       this.token,
-      this.renewalToken});
+     });
 
-  factory User.fromToken(String token) {
+  factory User.fromToken(String encodedToken, Map<String, dynamic> decodedToken) {
     return User(
-      token: token,
+      token: encodedToken,
+      id: decodedToken["user"]["id"],
+      email: decodedToken["user"]["email"],
+      username: decodedToken["user"]["username"]
     );
   }
 
   factory User.fromJson(Map<String, dynamic> responseData) {
     return User(
-      token: responseData['access_token'],
+    id: responseData["id"],
+      email: responseData["email"],
+      username: responseData["username"]
     );
   }
 }

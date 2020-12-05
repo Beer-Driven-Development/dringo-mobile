@@ -1,5 +1,6 @@
 import 'package:dringo/domain/user.dart';
 import 'package:flutter/foundation.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class UserProvider with ChangeNotifier {
   User _user = new User();
@@ -7,7 +8,8 @@ class UserProvider with ChangeNotifier {
   User get user => _user;
 
   void setUser(String token) {
-    _user = new User.fromToken(token);
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    _user = new User.fromToken(token, decodedToken);
     notifyListeners();
   }
 

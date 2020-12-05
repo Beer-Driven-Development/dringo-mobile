@@ -25,6 +25,7 @@ class Room with ChangeNotifier {
       id: responseData['id'],
       name: responseData['name'],
       passcode: responseData['passcode'],
+      creator: User.fromJson(responseData['creator'])
     );
   }
 }
