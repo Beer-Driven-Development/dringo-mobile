@@ -1,9 +1,10 @@
 import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/room.dart';
 import 'package:dringo/domain/secure_storage.dart';
-import 'package:dringo/services/socket_service.dart';
-import 'package:flutter/material.dart';
 import 'package:dringo/pages/room.dart' as RoomPage;
+import 'package:dringo/services/socket_service.dart';
+import 'package:dringo/util/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../main.dart';
 
@@ -11,13 +12,10 @@ class RoomItem extends StatelessWidget with SecureStorageMixin {
   final Room room;
   RoomItem({this.room});
 
-
   @override
   Widget build(BuildContext context) {
-
     final SocketService socketService = injector.get<SocketService>();
     socketService.createSocketConnection();
-
 
     Future _asyncInputDialog(BuildContext context, int id) async {
       String passcode = '';
@@ -26,26 +24,30 @@ class RoomItem extends StatelessWidget with SecureStorageMixin {
       return showDialog(
         context: context,
         barrierDismissible:
-        false, // dialog is dismissible with a tap on the barrier
+            false, // dialog is dismissible with a tap on the barrier
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Enter passcode'),
+            title:
+                Text('Enter passcode', style: TextStyle(color: Colors.indigo)),
             content: new Row(
               children: [
                 new Expanded(
                     child: new TextField(
-                      autofocus: true,
-                      decoration: new InputDecoration(
-                          labelText: 'Passcode', hintText: 'Enter room passcode'),
-                      onChanged: (value) {
-                        passcode = value;
-                      },
-                    ))
+                  autofocus: true,
+                  decoration:
+                      buildInputDecoration('Enter room passcode', Icons.lock),
+                  onChanged: (value) {
+                    passcode = value;
+                  },
+                ))
               ],
             ),
             actions: [
               FlatButton(
-                child: Text('Enter'),
+                child: Text(
+                  'Enter',
+                  style: TextStyle(color: Colors.indigo),
+                ),
                 onPressed: () async {
                   // final SocketService socketService =
                   //     injector.get<SocketService>();
@@ -63,8 +65,6 @@ class RoomItem extends StatelessWidget with SecureStorageMixin {
         },
       );
     }
-
-
 
     Size deviceSize = MediaQuery.of(context).size;
     return InkWell(
