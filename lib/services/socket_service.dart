@@ -35,7 +35,6 @@ class SocketService with ChangeNotifier {
 
   Future<bool> leaveRoom(String event, message) async {
     sendMessage(event, message);
-    sink.close();
     return true;
   }
 
