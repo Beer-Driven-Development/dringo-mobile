@@ -6,7 +6,6 @@ import 'package:dringo/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 import '../main.dart';
 
 class Room extends StatefulWidget {
@@ -41,7 +40,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
 
     return StreamBuilder(
       stream: socketService.getResponse,
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) participants.add(snapshot.data.toString());
 
         return WillPopScope(
@@ -72,9 +71,9 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                         style: TextStyle(fontSize: 16.0),
                       ),
                     SizedBox(height: 30.0),
-
                     if (room.creator.id == user.id)
-                    RaisedButton(child: Text("Start".toUpperCase()),onPressed: (){})
+                      RaisedButton(
+                          child: Text("Start".toUpperCase()), onPressed: () {})
                   ]),
             ),
           ),
