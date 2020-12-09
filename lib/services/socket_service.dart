@@ -28,9 +28,8 @@ class SocketService with ChangeNotifier {
     });
     this.socket.on("connect", (data) => _socketResponse.sink.add(data));
     this.socket.on("disconnect", (data) => _socketResponse.sink.add(data));
-    this.socket.on('joinedRoom', (data) => _socketResponse.sink.add(data));
+    this.socket.on('usersList', (data) => _socketResponse.sink.add(data));
     this.socket.on('accessDenied', (data) => _socketResponse.sink.add(data));
-    this.socket.on('userLeft', (data) => _socketResponse.sink.add(data));
   }
 
   Future<bool> leaveRoom(String event, message) async {
