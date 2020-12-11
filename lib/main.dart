@@ -1,26 +1,58 @@
+import 'dart:async';
+import 'dart:collection';
+
+import 'package:dringo/domain/room.dart';
 import 'package:dringo/domain/secure_storage.dart';
+import 'package:dringo/domain/user.dart';
 import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/login.dart';
 import 'package:dringo/providers/beer_provider.dart';
 import 'package:dringo/providers/category_provider.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
-import 'package:dringo/services/app_initializer.dart';
-import 'package:dringo/services/dependency_injection.dart';
 import 'package:dringo/services/socket_service.dart';
+import 'package:dringo/services/stream_socket.dart';
+import 'package:dringo/util/app_url.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'providers/auth.dart';
 import 'routes.dart';
 
 Injector injector;
+IO.Socket socket = IO.io(
+    AppUrl.baseURL, IO.OptionBuilder().setTransports(['websocket']).build());
+
+void emit(String event, message) {
+  socket.emit(event, message);
+}
 
 void main() async {
-  DependencyInjection().initialise(Injector());
-  injector = Injector();
-  await AppInitializer().initialise(injector);
+  // DependencyInjection().initialise(Injector());
+  // injector = Injector();
+  // await AppInitializer().initialise(injector);
+  onMessageReceived(LinkedHashMap<String, dynamic> data) {
+    Room room = Room.fromSocket(data['room']);
+    List<User> users = data.values.first;
+    users.forEach((user) {
+      streamSocket.addResponse(user);
+    });
+  }
+
+  void connectAndListen() {
+    socket.onConnect((_) {
+      print('connect');
+      socket.emit('msg', 'test');
+    });
+
+    //When an event recieved from server, data is added to the stream
+    socket.on('usersList', (data) => onMessageReceived(data));
+
+    socket.onDisconnect((_) => print('disconnect'));
+  }
+
   runApp(Dringo());
 }
 

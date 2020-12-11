@@ -2,7 +2,6 @@ import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/room.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/pages/room.dart' as RoomPage;
-import 'package:dringo/services/socket_service.dart';
 import 'package:dringo/util/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +13,8 @@ class RoomItem extends StatelessWidget with SecureStorageMixin {
 
   @override
   Widget build(BuildContext context) {
-    final SocketService socketService = injector.get<SocketService>();
-    socketService.createSocketConnection();
+    // final SocketService socketService = injector.get<SocketService>();
+    // socketService.createSocketConnection();
 
     Future _asyncInputDialog(BuildContext context, int id) async {
       String passcode = '';
@@ -48,14 +47,9 @@ class RoomItem extends StatelessWidget with SecureStorageMixin {
                   'Enter',
                   style: TextStyle(color: Colors.indigo),
                 ),
-                onPressed: () async {
-                  // final SocketService socketService =
-                  //     injector.get<SocketService>();
-                  // socketService.createSocketConnection();
-                  // socketService.enter(id, passcode);
-
+                onPressed: () {
                   var message = new MessageModel().toJson(token, id, passcode);
-                  socketService.sendMessage('joinRoom', message);
+                  emit('joinRoom', message);
                   Navigator.pushNamed(context, RoomPage.Room.routeName,
                       arguments: id);
                 },

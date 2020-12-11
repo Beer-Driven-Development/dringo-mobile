@@ -2,11 +2,9 @@ import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
-import 'package:dringo/services/socket_service.dart';
+import 'package:dringo/services/stream_socket.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../main.dart';
 
 class Room extends StatefulWidget {
   static const routeName = '/room';
@@ -24,7 +22,8 @@ class _RoomState extends State<Room> with SecureStorageMixin {
   @override
   Widget build(BuildContext context) {
     int id = ModalRoute.of(context).settings.arguments;
-    final SocketService socketService = injector.get<SocketService>();
+
+    // final SocketService socketService = injector.get<SocketService>();
     void dispose() {
       super.dispose();
     }
@@ -39,7 +38,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
     ).findById(id);
 
     return StreamBuilder(
-      stream: socketService.getResponse,
+      stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) participants.add(snapshot.data.toString());
 
@@ -47,7 +46,8 @@ class _RoomState extends State<Room> with SecureStorageMixin {
           onWillPop: () async {
             final token = await getSecureStorage("token");
             var message = new MessageModel().fromIdToJson(token.toString(), id);
-            return await socketService.leaveRoom('leaveRoom', message);
+            // return await streamSocket.leaveRoom('leaveRoom', message);
+            return true;
           },
           child: Scaffold(
             body: Container(
