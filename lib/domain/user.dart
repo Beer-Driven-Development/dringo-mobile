@@ -20,7 +20,9 @@ class User {
         username: decodedToken["username"]);
   }
 
-  factory User.fromJson(Map<String, dynamic> responseData) {
+  factory User.fromJson(
+    Map<String, dynamic> responseData,
+  ) {
     return User(
         id: responseData["id"],
         email: responseData["email"],

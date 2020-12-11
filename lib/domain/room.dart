@@ -13,19 +13,33 @@ class Room with ChangeNotifier {
 
   Room(
       {@required this.id,
-      @required this.name, @required this.passcode,
+      @required this.name,
+      @required this.passcode,
       this.createdAt,
       this.startedAt,
       this.finishedAt,
       this.creator,
       this.participants});
 
+  factory Room.fromSocket(Map<String, dynamic> data) {
+    return Room(
+        id: data['id'],
+        name: data['name'],
+        passcode: data['passcode'],
+        createdAt: DateTime.tryParse(data['createdAt']),
+        startedAt: DateTime.tryParse(data['startedAt']),
+        finishedAt: DateTime.tryParse(data['finishedAt']),
+        participants: data['participants'],
+        creator: User.fromJson(
+          data['creator'],
+        ));
+  }
+
   factory Room.fromJson(Map<String, dynamic> responseData) {
     return Room(
-      id: responseData['id'],
-      name: responseData['name'],
-      passcode: responseData['passcode'],
-      creator: User.fromJson(responseData['creator'])
-    );
+        id: responseData['id'],
+        name: responseData['name'],
+        passcode: responseData['passcode'],
+        creator: User.fromJson(responseData['creator']));
   }
 }

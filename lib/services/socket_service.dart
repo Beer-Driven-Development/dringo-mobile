@@ -10,7 +10,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService with ChangeNotifier {
   IO.Socket socket;
-  var data = 'kurde faja';
+  var data;
   var _socketResponse = new BehaviorSubject();
 
   Sink<dynamic> get sink => _socketResponse.sink;
@@ -40,8 +40,8 @@ class SocketService with ChangeNotifier {
     return true;
   }
 
-  onMessageReceived(LinkedHashMap<Room, List<User>> data) {
-    Room room = data.keys.first;
+  onMessageReceived(LinkedHashMap<String, dynamic> data) {
+    Room room = Room.fromSocket(data['room']);
     List<User> users = data.values.first;
     users.forEach((user) {
       _socketResponse.sink.add(user);
