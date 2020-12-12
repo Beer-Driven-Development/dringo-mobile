@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
@@ -30,6 +32,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
       super.dispose();
     }
 
+    var map = new LinkedHashMap<String, List<User>>();
     var participants = new List<User>();
 
     final user = Provider.of<UserProvider>(context, listen: false).user;
@@ -42,7 +45,10 @@ class _RoomState extends State<Room> with SecureStorageMixin {
     return StreamBuilder(
       stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) participants = snapshot.data;
+        if (snapshot.hasData) map = snapshot.data;
+        if (map.containsKey(room.id.toString())) {
+          participants = map.values.first.toList();
+        }
 
         return WillPopScope(
           onWillPop: () async {

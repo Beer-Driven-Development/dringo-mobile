@@ -40,10 +40,12 @@ void main() async {
       User userToAdd = User.fromJson(user);
       users.add(userToAdd);
     });
+    Map<String, List<User>> response = new LinkedHashMap<String, List<User>>();
+    response[roomId] = users;
     // users.forEach((user) {
     //   streamSocket.addResponse(user);
     // });
-    streamSocket.addResponse(users);
+    streamSocket.addResponse(response);
   }
 
   socket.on('usersList', (data) => onMessageReceived(data));
