@@ -1,6 +1,7 @@
 import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
+import 'package:dringo/main.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/services/stream_socket.dart';
@@ -47,7 +48,8 @@ class _RoomState extends State<Room> with SecureStorageMixin {
           onWillPop: () async {
             final token = await getSecureStorage("token");
             var message = new MessageModel().fromIdToJson(token.toString(), id);
-            // return await streamSocket.leaveRoom('leaveRoom', message);
+            emit('leaveRoom', message);
+            streamSocket.dispose();
             return true;
           },
           child: Scaffold(

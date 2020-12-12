@@ -1,7 +1,7 @@
 import 'dart:async';
 
 class StreamSocket {
-  final _socketResponse = StreamController<dynamic>();
+  final _socketResponse = StreamController<dynamic>.broadcast();
 
   void Function(dynamic) get addResponse => _socketResponse.sink.add;
 
@@ -9,6 +9,7 @@ class StreamSocket {
 
   void dispose() {
     _socketResponse.close();
+    _socketResponse.sink.close();
   }
 }
 
