@@ -29,7 +29,7 @@ class Room with ChangeNotifier {
         createdAt: DateTime.tryParse(data['createdAt']),
         startedAt: DateTime.tryParse(data['startedAt']),
         finishedAt: DateTime.tryParse(data['finishedAt']),
-        participants: data['participants'],
+        // participants: data['participants'],
         creator: User.fromJson(
           data['creator'],
         ));

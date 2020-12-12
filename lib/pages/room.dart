@@ -1,5 +1,6 @@
 import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/secure_storage.dart';
+import 'package:dringo/domain/user.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/services/stream_socket.dart';
@@ -28,7 +29,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
       super.dispose();
     }
 
-    var participants = new List<String>();
+    var participants = new List<User>();
 
     final user = Provider.of<UserProvider>(context, listen: false).user;
 
@@ -40,7 +41,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
     return StreamBuilder(
       stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) participants.add(snapshot.data.toString());
+        if (snapshot.hasData) participants.add(snapshot.data);
 
         return WillPopScope(
           onWillPop: () async {
@@ -67,7 +68,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                     SizedBox(height: 70.0),
                     for (var participant in participants)
                       Text(
-                        participant,
+                        participant.username,
                         style: TextStyle(fontSize: 16.0),
                       ),
                     SizedBox(height: 30.0),

@@ -35,23 +35,20 @@ void main() async {
   // await AppInitializer().initialise(injector);
   onMessageReceived(LinkedHashMap<String, dynamic> data) {
     Room room = Room.fromSocket(data['room']);
-    List<User> users = data.values.first;
+    List<dynamic> usersData = data['users'];
+    List<User> users = new List<User>();
+    usersData.forEach((user) {
+      User userToAdd = User.fromJson(user);
+      users.add(userToAdd);
+    });
     users.forEach((user) {
       streamSocket.addResponse(user);
     });
   }
 
-  void connectAndListen() {
-    socket.onConnect((_) {
-      print('connect');
-      socket.emit('msg', 'test');
-    });
+  socket.on('usersList', (data) => onMessageReceived(data));
 
-    //When an event recieved from server, data is added to the stream
-    socket.on('usersList', (data) => onMessageReceived(data));
-
-    socket.onDisconnect((_) => print('disconnect'));
-  }
+  socket.onDisconnect((_) => print('disconnect'));
 
   runApp(Dringo());
 }
