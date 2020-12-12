@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 class StreamSocket {
-  final _socketResponse = new BehaviorSubject(sync: true);
+  final _socketResponse = new BehaviorSubject();
 
   void Function(dynamic) get addResponse => _socketResponse.sink.add;
 
@@ -11,7 +11,6 @@ class StreamSocket {
 
   void dispose() {
     _socketResponse.close();
-    _socketResponse.sink.close();
   }
 }
 

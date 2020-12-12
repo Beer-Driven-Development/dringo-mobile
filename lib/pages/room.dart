@@ -49,7 +49,6 @@ class _RoomState extends State<Room> with SecureStorageMixin {
             final token = await getSecureStorage("token");
             var message = new MessageModel().fromIdToJson(token.toString(), id);
             emit('leaveRoom', message);
-            streamSocket.dispose(); //???
             return true;
           },
           child: Scaffold(
