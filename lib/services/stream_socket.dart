@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+
 class StreamSocket {
-  final _socketResponse = StreamController<dynamic>.broadcast();
+  final _socketResponse = new BehaviorSubject(sync: true);
 
   void Function(dynamic) get addResponse => _socketResponse.sink.add;
 

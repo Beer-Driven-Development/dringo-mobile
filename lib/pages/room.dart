@@ -48,8 +48,11 @@ class _RoomState extends State<Room> with SecureStorageMixin {
           onWillPop: () async {
             final token = await getSecureStorage("token");
             var message = new MessageModel().fromIdToJson(token.toString(), id);
+            participants
+                .removeWhere((participant) => participant.id == user.id);
             emit('leaveRoom', message);
-            streamSocket.dispose();
+
+            streamSocket.dispose(); //???
             return true;
           },
           child: Scaffold(
