@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:dringo/domain/room.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/util/app_url.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +40,7 @@ class SocketService with ChangeNotifier {
   }
 
   onMessageReceived(LinkedHashMap<String, dynamic> data) {
-    Room room = Room.fromSocket(data['room']);
+    String roomId = data['room'];
     List<User> users = data.values.first;
     users.forEach((user) {
       _socketResponse.sink.add(user);

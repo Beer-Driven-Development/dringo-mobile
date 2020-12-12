@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:dringo/domain/room.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/pages/dashboard.dart';
@@ -34,7 +33,7 @@ void main() async {
   // injector = Injector();
   // await AppInitializer().initialise(injector);
   onMessageReceived(LinkedHashMap<String, dynamic> data) {
-    Room room = Room.fromSocket(data['room']);
+    String roomId = data['room'];
     List<dynamic> usersData = data['users'];
     List<User> users = new List<User>();
     usersData.forEach((user) {
