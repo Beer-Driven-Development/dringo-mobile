@@ -42,16 +42,13 @@ class _RoomState extends State<Room> with SecureStorageMixin {
     return StreamBuilder(
       stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) participants.add(snapshot.data);
+        if (snapshot.hasData) participants = snapshot.data;
 
         return WillPopScope(
           onWillPop: () async {
             final token = await getSecureStorage("token");
             var message = new MessageModel().fromIdToJson(token.toString(), id);
-            participants
-                .removeWhere((participant) => participant.id == user.id);
             emit('leaveRoom', message);
-
             streamSocket.dispose(); //???
             return true;
           },

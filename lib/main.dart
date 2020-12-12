@@ -40,9 +40,10 @@ void main() async {
       User userToAdd = User.fromJson(user);
       users.add(userToAdd);
     });
-    users.forEach((user) {
-      streamSocket.addResponse(user);
-    });
+    // users.forEach((user) {
+    //   streamSocket.addResponse(user);
+    // });
+    streamSocket.addResponse(users);
   }
 
   socket.on('usersList', (data) => onMessageReceived(data));
