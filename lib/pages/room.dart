@@ -110,7 +110,6 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                           ),
                         ],
                       ),
-                    SizedBox(height: 400.0),
                     if (user != null && room.creator.id == user.id)
                       Center(
                         child: RaisedButton(
@@ -125,7 +124,11 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                             style: TextStyle(
                                 fontSize: 18.0, color: Colors.indigoAccent),
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            await Provider.of<RoomProvider>(context,
+                                    listen: false)
+                                .start(room.id, participants);
+                          },
                         ),
                       ),
                   ]),

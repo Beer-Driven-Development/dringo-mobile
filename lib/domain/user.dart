@@ -28,4 +28,18 @@ class User {
         email: responseData["email"],
         username: responseData["username"]);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": this.id,
+      "username": this.username,
+      "email": this.email,
+    };
+  }
+
+  static List<User> getParticipants(dynamic data) {
+    List<User> participants =
+        List<User>.from(data.map((u) => User.fromJson(u)));
+    return participants;
+  }
 }

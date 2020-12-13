@@ -35,6 +35,20 @@ class Room with ChangeNotifier {
         ));
   }
 
+  factory Room.fromFullJson(Map<String, dynamic> data) {
+    return Room(
+        id: data['id'],
+        name: data['name'],
+        passcode: data['passcode'],
+        createdAt: DateTime.tryParse(data['createdAt']),
+        startedAt: DateTime.tryParse(data['startedAt']),
+        finishedAt: DateTime.tryParse(data['finishedAt']),
+        participants: User.getParticipants(data['participants']),
+        creator: User.fromJson(
+          data['creator'],
+        ));
+  }
+
   factory Room.fromJson(Map<String, dynamic> responseData) {
     return Room(
         id: responseData['id'],
