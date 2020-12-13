@@ -31,11 +31,15 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   void initState() {
-    // Provider.of<Courses>(context).fetchAndSetProducts(); // WON'T WORK!
     Future.delayed(Duration.zero).then((_) {
+      getUser();
       Provider.of<RoomProvider>(context, listen: false).getAll();
     });
     super.initState();
+  }
+
+  void getUser() async {
+    user = await Provider.of<UserProvider>(context, listen: false).getUser();
   }
 
   @override

@@ -24,7 +24,6 @@ class _RoomState extends State<Room> with SecureStorageMixin {
   @override
   void initState() {
     super.initState();
-    getUser();
   }
 
   void getUser() async {
@@ -55,6 +54,9 @@ class _RoomState extends State<Room> with SecureStorageMixin {
         if (map.containsKey(room.id.toString())) {
           participants = map.values.first.toList();
         }
+        Future.delayed(Duration.zero).then((_) {
+          getUser();
+        });
 
         return WillPopScope(
           onWillPop: () async {
@@ -109,7 +111,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                         ],
                       ),
                     SizedBox(height: 400.0),
-                    if (room.creator.id == user.id)
+                    if (user != null && room.creator.id == user.id)
                       Center(
                         child: RaisedButton(
                           elevation: 10,
