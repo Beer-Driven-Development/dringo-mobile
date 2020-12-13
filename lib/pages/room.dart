@@ -8,6 +8,7 @@ import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/services/stream_socket.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class Room extends StatefulWidget {
@@ -18,9 +19,16 @@ class Room extends StatefulWidget {
 }
 
 class _RoomState extends State<Room> with SecureStorageMixin {
+  var user;
+
   @override
   void initState() {
     super.initState();
+    getUser();
+  }
+
+  void getUser() async {
+    user = await Provider.of<UserProvider>(context, listen: false).getUser();
   }
 
   @override
@@ -34,8 +42,6 @@ class _RoomState extends State<Room> with SecureStorageMixin {
 
     var map = new LinkedHashMap<String, List<User>>();
     var participants = new List<User>();
-
-    final user = Provider.of<UserProvider>(context, listen: false).user;
 
     final room = Provider.of<RoomProvider>(
       context,
@@ -68,20 +74,58 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                         room.name,
                         style: TextStyle(
                             fontSize: 28.0,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w900,
                             color: Colors.indigo),
                       ),
                     ),
                     SizedBox(height: 70.0),
+                    Text(
+                      'List of participants',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.indigo,
+                          fontSize: 24.0),
+                    ),
+                    SizedBox(height: 20.0),
                     for (var participant in participants)
-                      Text(
-                        participant.username,
-                        style: TextStyle(fontSize: 16.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (participant.id == room.creator.id)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                FontAwesomeIcons.crown,
+                                color: Colors.indigo,
+                              ),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              participant.username,
+                              style: TextStyle(fontSize: 18.0),
+                            ),
+                          ),
+                        ],
                       ),
-                    SizedBox(height: 30.0),
+                    SizedBox(height: 400.0),
                     if (room.creator.id == user.id)
-                      RaisedButton(
-                          child: Text("Start".toUpperCase()), onPressed: () {})
+                      Center(
+                        child: RaisedButton(
+                          elevation: 10,
+                          color: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 50),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(50.0)),
+                          child: Text(
+                            'Start'.toUpperCase(),
+                            style: TextStyle(
+                                fontSize: 18.0, color: Colors.indigoAccent),
+                          ),
+                          onPressed: () {},
+                        ),
+                      ),
                   ]),
             ),
           ),
