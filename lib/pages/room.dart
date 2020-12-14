@@ -130,8 +130,9 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                             await Provider.of<DegustationProvider>(context,
                                     listen: false)
                                 .start(room.id, participants);
-                            Navigator.of(context)
-                                .pushNamed(Degustation.routeName);
+                            Navigator.of(context).pushNamed(
+                                Degustation.routeName,
+                                arguments: room);
                           },
                         ),
                       ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dringo/domain/beer.dart';
 import 'package:dringo/domain/pivot.dart';
+import 'package:dringo/domain/rating.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/util/app_url.dart';
@@ -56,6 +57,32 @@ class DegustationProvider with ChangeNotifier, SecureStorageMixin {
       });
       _pivots = loadedPivots;
       notifyListeners();
+    }
+  }
+
+  Future<Rating> vote(int roomId, int beerId, int pivotId, double score) async {
+    final token = await getSecureStorage("token");
+
+    final Map<String, dynamic> ratingData = {
+      'beerId': beerId,
+      'pivotId': pivotId,
+      'score': score
+    };
+
+    final response = await post(
+      AppUrl.rooms + '/' + roomId.toString() + '/vote',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      },
+      body: json.encode(ratingData),
+    );
+
+    if (response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      final rating = Rating.fromJson(responseData);
+      notifyListeners();
+      return rating;
     }
   }
 }

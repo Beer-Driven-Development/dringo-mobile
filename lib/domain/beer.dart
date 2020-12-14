@@ -22,4 +22,11 @@ class Beer with ChangeNotifier {
         abv: double.parse(responseData['abv'].toString()),
         room: Room.fromDegustationJson(responseData['room']));
   }
+
+  factory Beer.fromRatingJson(Map<String, dynamic> responseData) {
+    return Beer(
+        id: responseData['id'],
+        name: responseData['name'],
+        abv: double.parse(responseData['abv'].toString()));
+  }
 }

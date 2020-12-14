@@ -17,4 +17,9 @@ class Pivot {
         category: Category.fromJson(responseData['category']),
         room: Room.fromDegustationJson(responseData['room']));
   }
+
+  factory Pivot.fromRatingJson(Map<String, dynamic> responseData) {
+    return Pivot(
+        id: responseData['id'] as int, weight: responseData['weight'] as int);
+  }
 }
