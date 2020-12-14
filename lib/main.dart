@@ -7,6 +7,7 @@ import 'package:dringo/pages/dashboard.dart';
 import 'package:dringo/pages/login.dart';
 import 'package:dringo/providers/beer_provider.dart';
 import 'package:dringo/providers/category_provider.dart';
+import 'package:dringo/providers/degustation_provider.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/services/socket_service.dart';
@@ -80,6 +81,7 @@ class _DringoState extends State<Dringo> with SecureStorageMixin {
         ChangeNotifierProvider(create: (_) => RoomProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => BeerProvider()),
+        ChangeNotifierProvider(create: (_) => DegustationProvider()),
         ChangeNotifierProvider(create: (_) => SocketService()),
       ],
       child: MaterialApp(

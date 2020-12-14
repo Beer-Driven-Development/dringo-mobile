@@ -15,6 +15,6 @@ class Pivot {
         id: responseData['id'] as int,
         weight: responseData['weight'] as int,
         category: Category.fromJson(responseData['category']),
-        room: Room.fromJson(responseData['room']));
+        room: Room.fromDegustationJson(responseData['room']));
   }
 }

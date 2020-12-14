@@ -4,6 +4,8 @@ import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/main.dart';
+import 'package:dringo/pages/degustation.dart';
+import 'package:dringo/providers/degustation_provider.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/services/stream_socket.dart';
@@ -125,9 +127,11 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                                 fontSize: 18.0, color: Colors.indigoAccent),
                           ),
                           onPressed: () async {
-                            await Provider.of<RoomProvider>(context,
+                            await Provider.of<DegustationProvider>(context,
                                     listen: false)
                                 .start(room.id, participants);
+                            Navigator.of(context)
+                                .pushNamed(Degustation.routeName);
                           },
                         ),
                       ),

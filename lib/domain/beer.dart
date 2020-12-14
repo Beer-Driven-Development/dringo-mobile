@@ -20,6 +20,6 @@ class Beer with ChangeNotifier {
         id: responseData['id'],
         name: responseData['name'],
         abv: double.parse(responseData['abv'].toString()),
-        room: Room.fromJson(responseData['room']));
+        room: Room.fromDegustationJson(responseData['room']));
   }
 }
