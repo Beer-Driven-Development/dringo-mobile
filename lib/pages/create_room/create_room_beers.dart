@@ -14,17 +14,17 @@ class CreateRoomBeers extends StatefulWidget {
 
 class _CreateRoomBeersState extends State<CreateRoomBeers> {
   final formKey = new GlobalKey<FormState>();
-  List<Beer> beers;
+  List<Beer> beers = [];
   String _beerName;
   double _beerAbv;
   int roomId;
   var _isInit = true;
   var _isButtonDisabled;
 
-  _addBeer(Beer beer) {
-    Provider.of<BeerProvider>(context, listen: false).addBeer(beer);
-    beers = Provider.of<BeerProvider>(context, listen: false).beers;
-    setState(() {
+  _addBeer(Beer beer) async {
+    await Provider.of<BeerProvider>(context, listen: false).addBeer(beer);
+    setState(()  {
+      beers =  Provider.of<BeerProvider>(context, listen: false).beers;
       _isButtonDisabled = false;
     });
   }
@@ -190,52 +190,64 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
                   ),
                   SizedBox(height: 50.0),
                   Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        RaisedButton(
-                          elevation: 10,
-                          color: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 50),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(50.0)),
-                          child: Text('Draft'.toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: _isButtonDisabled
-                                      ? Colors.white
-                                      : Colors.indigoAccent)),
-                          onPressed: _isButtonDisabled
-                              ? null
-                              : () => {
-                                    Navigator.popUntil(context, (route) {
-                                      return route.isFirst;
-                                    })
-                                  },
+                        Container(
+                          color: Colors.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: RaisedButton(
+                              elevation: 10,
+                              color: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 40),
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(50.0)),
+                              child: Text('Draft'.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      color: _isButtonDisabled
+                                          ? Colors.white
+                                          : Colors.indigoAccent)),
+                              onPressed: _isButtonDisabled
+                                  ? null
+                                  : () => {
+                                        Navigator.popUntil(context, (route) {
+                                          return route.isFirst;
+                                        })
+                                      },
+                            ),
+                          ),
                         ),
-                        RaisedButton(
-                          elevation: 10,
-                          color: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 50),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(50.0)),
-                          child: Text('Publish'.toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: _isButtonDisabled
-                                      ? Colors.white
-                                      : Colors.indigoAccent)),
-                          onPressed: _isButtonDisabled
-                              ? null
-                              : () async => {
-                                    await Provider.of<RoomProvider>(context,
-                                            listen: false)
-                                        .changeStatus(roomId),
-                                    Navigator.pop(context),
-                                    Navigator.pop(context),
-                                    Navigator.pop(context),
-                                  },
+                        Container(
+                          color: Colors.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: RaisedButton(
+                              elevation: 10,
+                              color: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 40),
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(50.0)),
+                              child: Text('Publish'.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      color: _isButtonDisabled
+                                          ? Colors.white
+                                          : Colors.indigoAccent)),
+                              onPressed: _isButtonDisabled
+                                  ? null
+                                  : () async => {
+                                        await Provider.of<RoomProvider>(context,
+                                                listen: false)
+                                            .changeStatus(roomId),
+                                        Navigator.pop(context),
+                                        Navigator.pop(context),
+                                        Navigator.pop(context),
+                                      },
+                            ),
+                          ),
                         ),
                       ]),
                   SizedBox(height: 30.0),

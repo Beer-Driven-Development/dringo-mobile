@@ -23,14 +23,18 @@ class Room extends StatefulWidget {
 class _RoomState extends State<Room> with SecureStorageMixin {
   var user;
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void getUser() async {
     user = await Provider.of<UserProvider>(context, listen: false).getUser();
   }
+
+
+  @override
+  void initState() {
+
+      super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +53,12 @@ class _RoomState extends State<Room> with SecureStorageMixin {
       listen: false,
     ).findById(id);
 
+
+    Future.delayed(Duration.zero).then((_) {
+      getUser();
+    });
+
+
     return StreamBuilder(
       stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -56,9 +66,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
         if (map.containsKey(room.id.toString())) {
           participants = map.values.first.toList();
         }
-        Future.delayed(Duration.zero).then((_) {
-          getUser();
-        });
+
 
         return WillPopScope(
           onWillPop: () async {
