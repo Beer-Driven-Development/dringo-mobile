@@ -156,7 +156,7 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
                                           beers[index].name,
                                           style: TextStyle(
                                               color: Colors.black87,
-                                              fontSize: 22.0),
+                                              fontSize: 16.0),
                                         ),
                                       ),
                                       Padding(
@@ -165,7 +165,7 @@ class _CreateRoomBeersState extends State<CreateRoomBeers> {
                                           beers[index].abv.toString() + '%',
                                           style: TextStyle(
                                               color: Colors.black87,
-                                              fontSize: 22.0),
+                                              fontSize: 16.0),
                                         ),
                                       ),
                                       Padding(

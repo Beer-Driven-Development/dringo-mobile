@@ -120,6 +120,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                           ),
                         ],
                       ),
+                    SizedBox(height: 70.0),
                     if (user != null && room.creator.id == user.id)
                       Center(
                         child: RaisedButton(
