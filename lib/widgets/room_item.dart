@@ -9,6 +9,7 @@ import '../main.dart';
 
 class RoomItem extends StatelessWidget with SecureStorageMixin {
   final Room room;
+
   RoomItem({this.room});
 
   @override
@@ -47,11 +48,16 @@ class RoomItem extends StatelessWidget with SecureStorageMixin {
                   'Enter',
                   style: TextStyle(color: Colors.indigo),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   var message = new MessageModel().toJson(token, id, passcode);
                   emit('joinRoom', message);
-                  Navigator.pushNamed(context, RoomPage.Room.routeName,
-                      arguments: id);
+                  Future.delayed(Duration(milliseconds: 10), () async {
+                    var roomsList = await getAccessedRooms();
+                    if (roomsList.contains(id.toString())) {
+                      Navigator.pushNamed(context, RoomPage.Room.routeName,
+                          arguments: id);
+                    }
+                  });
                 },
               ),
             ],
