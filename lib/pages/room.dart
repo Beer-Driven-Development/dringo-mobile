@@ -35,7 +35,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
   @override
   Widget build(BuildContext context) {
     int id = ModalRoute.of(context).settings.arguments;
-
+    getUser();
     // final SocketService socketService = injector.get<SocketService>();
     void dispose() {
       super.dispose();
@@ -56,9 +56,6 @@ class _RoomState extends State<Room> with SecureStorageMixin {
         if (map.containsKey(room.id.toString())) {
           participants = map.values.first.toList();
         }
-        Future.delayed(Duration.zero).then((_) {
-          getUser();
-        });
 
         return WillPopScope(
           onWillPop: () async {
@@ -130,9 +127,24 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                             await Provider.of<DegustationProvider>(context,
                                     listen: false)
                                 .start(room.id, participants);
-                            Navigator.of(context).pushNamed(
-                                Degustation.routeName,
-                                arguments: room);
+                            var beers = Provider.of<DegustationProvider>(
+                                    context,
+                                    listen: false)
+                                .beers;
+                            var pivots = Provider.of<DegustationProvider>(
+                                    context,
+                                    listen: false)
+                                .pivots;
+                            if (beers.isNotEmpty && pivots.isNotEmpty) {
+                              final token = await getSecureStorage("token");
+                              var message = new MessageModel()
+                                  .fromIdToJson(token.toString(), id);
+
+                              emit('getDegustation', message);
+                              Navigator.of(context).pushNamed(
+                                  Degustation.routeName,
+                                  arguments: room);
+                            }
                           },
                         ),
                       ),

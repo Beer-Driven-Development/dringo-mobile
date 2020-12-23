@@ -18,6 +18,8 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import 'domain/beer.dart';
+import 'domain/pivot.dart';
 import 'providers/auth.dart';
 import 'routes.dart';
 
@@ -49,8 +51,29 @@ void main() async {
     streamSocket.addResponse(response);
   }
 
-  socket.on('usersList', (data) => onMessageReceived(data));
+  onDegustationReceived(LinkedHashMap<String, dynamic> degustation) {
+    List<dynamic> beersData = degustation['beers'];
+    List<dynamic> pivotsData = degustation['pivots'];
 
+    List<Beer> beers = new List<Beer>();
+    List<Pivot> pivots = new List<Pivot>();
+
+    beersData.forEach((beer) {
+      Beer beerToAdd = Beer.fromJson(beer);
+      beers.add(beerToAdd);
+    });
+
+    pivotsData.forEach((pivot) {
+      Pivot pivotToAdd = Pivot.fromJson(pivot);
+      pivots.add(pivotToAdd);
+    });
+
+    streamSocket.addResponse(beers);
+    streamSocket.addResponse(pivots);
+  }
+
+  socket.on('usersList', (data) => onMessageReceived(data));
+  socket.on('degustation', (data) => onDegustationReceived(data));
   socket.onDisconnect((_) => print('disconnect'));
 
   runApp(Dringo());
