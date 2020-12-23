@@ -35,6 +35,7 @@ class BeerProvider with ChangeNotifier, SecureStorageMixin {
       final List<Beer> beers = _beers;
       final beer = Beer.fromJson(responseData);
       beers.add(beer);
+      notifyListeners();
       _beers = beers;
       notifyListeners();
     }

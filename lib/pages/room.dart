@@ -57,6 +57,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
           participants = map.values.first.toList();
         }
 
+
         return WillPopScope(
           onWillPop: () async {
             final token = await getSecureStorage("token");
@@ -109,6 +110,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                           ),
                         ],
                       ),
+                    SizedBox(height: 70.0),
                     if (user != null && room.creator.id == user.id)
                       Center(
                         child: RaisedButton(

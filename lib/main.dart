@@ -27,8 +27,13 @@ Injector injector;
 IO.Socket socket = IO.io(
     AppUrl.baseURL, IO.OptionBuilder().setTransports(['websocket']).build());
 
+List<String> roomsId = [];
+
 void emit(String event, message) {
   socket.emit(event, message);
+}
+Future<List<String>> getAccessedRooms() async {
+  return roomsId;
 }
 
 void main() async {
@@ -72,7 +77,15 @@ void main() async {
     streamSocket.addResponse(pivots);
   }
 
+  onRoomJoined(String roomId) {
+    if (roomId != null) roomsId.add(roomId);
+  }
+
+
+
   socket.on('usersList', (data) => onMessageReceived(data));
+  socket.on('joinedRoom', (data) => onRoomJoined(data));
+
   socket.on('degustation', (data) => onDegustationReceived(data));
   socket.onDisconnect((_) => print('disconnect'));
 
