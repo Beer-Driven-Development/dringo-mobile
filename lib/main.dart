@@ -32,6 +32,7 @@ List<String> roomsId = [];
 void emit(String event, message) {
   socket.emit(event, message);
 }
+
 Future<List<String>> getAccessedRooms() async {
   return roomsId;
 }
@@ -80,8 +81,6 @@ void main() async {
   onRoomJoined(String roomId) {
     if (roomId != null) roomsId.add(roomId);
   }
-
-
 
   socket.on('usersList', (data) => onMessageReceived(data));
   socket.on('joinedRoom', (data) => onRoomJoined(data));
