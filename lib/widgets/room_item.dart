@@ -51,7 +51,7 @@ class RoomItem extends StatelessWidget with SecureStorageMixin {
                 onPressed: () async {
                   var message = new MessageModel().toJson(token, id, passcode);
                   emit('joinRoom', message);
-                  Future.delayed(Duration(milliseconds: 10), () async {
+                  Future.delayed(Duration(milliseconds: 100), () async {
                     var roomsList = await getAccessedRooms();
                     if (roomsList.contains(id.toString())) {
                       Navigator.pushNamed(context, RoomPage.Room.routeName,

@@ -60,6 +60,36 @@ class DegustationProvider with ChangeNotifier, SecureStorageMixin {
     }
   }
 
+  Future<void> degustation(int roomId) async {
+    final token = await getSecureStorage("token");
+
+    final response = await post(
+      AppUrl.rooms + '/' + roomId.toString() + '/degustation',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      final beersData = responseData['beers'];
+      final List<Beer> loadedBeers = [];
+      beersData.forEach((beerData) {
+        loadedBeers.add(Beer.fromJson(beerData));
+      });
+      _beers = loadedBeers;
+      notifyListeners();
+      final pivotsData = responseData['pivots'];
+      final List<Pivot> loadedPivots = [];
+      pivotsData.forEach((pivotData) {
+        loadedPivots.add(Pivot.fromJson(pivotData));
+      });
+      _pivots = loadedPivots;
+      notifyListeners();
+    }
+  }
+
   Future<Rating> vote(int roomId, int beerId, int pivotId, double score) async {
     final token = await getSecureStorage("token");
 

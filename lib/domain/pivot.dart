@@ -2,7 +2,7 @@ import 'package:dringo/domain/category.dart';
 import 'package:dringo/domain/room.dart';
 import 'package:flutter/material.dart';
 
-class Pivot {
+class Pivot with ChangeNotifier {
   int id;
   int weight;
   Category category;

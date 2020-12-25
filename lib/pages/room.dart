@@ -4,7 +4,6 @@ import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/main.dart';
-import 'package:dringo/pages/degustation.dart';
 import 'package:dringo/providers/degustation_provider.dart';
 import 'package:dringo/providers/room_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
@@ -12,6 +11,8 @@ import 'package:dringo/services/stream_socket.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
+import 'degustation.dart';
 
 class Room extends StatefulWidget {
   static const routeName = '/room';
@@ -52,7 +53,12 @@ class _RoomState extends State<Room> with SecureStorageMixin {
     return StreamBuilder(
       stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) map = snapshot.data;
+        if (snapshot.data == 'degustation') {
+          Future.microtask(() => Navigator.of(context)
+              .pushNamed(Degustation.routeName, arguments: room));
+        } else {
+          map = snapshot.data;
+        }
         if (map.containsKey(room.id.toString())) {
           participants = map.values.first.toList();
         }
@@ -142,9 +148,6 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                                   .fromIdToJson(token.toString(), id);
 
                               emit('getDegustation', message);
-                              Navigator.of(context).pushNamed(
-                                  Degustation.routeName,
-                                  arguments: room);
                             }
                           },
                         ),
