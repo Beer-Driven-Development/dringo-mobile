@@ -15,4 +15,7 @@ class MessageModel {
 
   Map<String, dynamic> fromIdToJson(String token, int roomId) =>
       {"token": token, 'id': roomId};
+
+  Map<String, dynamic> fromDataToJson(String token, int roomId, int beerId) =>
+      {"token": token, 'roomId': roomId, 'beerId': beerId};
 }

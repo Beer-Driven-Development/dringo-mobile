@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:dringo/domain/degustation_data.dart';
 import 'package:dringo/domain/message_model.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
@@ -53,9 +54,11 @@ class _RoomState extends State<Room> with SecureStorageMixin {
     return StreamBuilder(
       stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.data == 'degustation') {
-          Future.microtask(() => Navigator.of(context)
-              .pushNamed(Degustation.routeName, arguments: room));
+        if (snapshot.data['beer'] != null) {
+          Future.microtask(() => Navigator.of(context).pushNamed(
+              Degustation.routeName,
+              arguments: DegustationData(
+                  room, snapshot.data['beer'], snapshot.data['pivots'])));
         } else {
           map = snapshot.data;
         }
@@ -148,6 +151,7 @@ class _RoomState extends State<Room> with SecureStorageMixin {
                                   .fromIdToJson(token.toString(), id);
 
                               emit('getDegustation', message);
+                              // emit('next', beers.first.id);
                             }
                           },
                         ),

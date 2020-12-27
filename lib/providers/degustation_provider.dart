@@ -11,6 +11,12 @@ import 'package:http/http.dart';
 
 class DegustationProvider with ChangeNotifier, SecureStorageMixin {
   List<Beer> _beers = [];
+  Beer _currentBeer;
+
+  Beer get currentBeer {
+    return _currentBeer;
+  }
+
   List<Pivot> _pivots = [];
 
   List<Beer> get beers {
@@ -60,11 +66,11 @@ class DegustationProvider with ChangeNotifier, SecureStorageMixin {
     }
   }
 
-  Future<void> degustation(int roomId) async {
+  Future<void> first(int roomId) async {
     final token = await getSecureStorage("token");
 
     final response = await post(
-      AppUrl.rooms + '/' + roomId.toString() + '/degustation',
+      AppUrl.rooms + '/' + roomId.toString() + '/first',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token,
@@ -73,12 +79,39 @@ class DegustationProvider with ChangeNotifier, SecureStorageMixin {
 
     if (response.statusCode == 201) {
       final responseData = json.decode(response.body);
-      final beersData = responseData['beers'];
-      final List<Beer> loadedBeers = [];
-      beersData.forEach((beerData) {
-        loadedBeers.add(Beer.fromJson(beerData));
+      final Beer loadedBeer = new Beer.fromJson(responseData['beer']);
+
+      _currentBeer = loadedBeer;
+      notifyListeners();
+      final pivotsData = responseData['pivots'];
+      final List<Pivot> loadedPivots = [];
+      pivotsData.forEach((pivotData) {
+        loadedPivots.add(Pivot.fromJson(pivotData));
       });
-      _beers = loadedBeers;
+      _pivots = loadedPivots;
+      notifyListeners();
+    }
+  }
+
+  Future<void> next(int roomId, int beerId) async {
+    final token = await getSecureStorage("token");
+    final Map<String, dynamic> data = {'beerId': beerId};
+    final response =
+        await post(AppUrl.rooms + '/' + roomId.toString() + '/next',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token,
+            },
+            body: json.encode(data));
+
+    if (response.statusCode == 400) {
+      return;
+    }
+    if (response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      final Beer loadedBeer = new Beer.fromJson(responseData['beer']);
+
+      _currentBeer = loadedBeer;
       notifyListeners();
       final pivotsData = responseData['pivots'];
       final List<Pivot> loadedPivots = [];
