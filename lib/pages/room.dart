@@ -54,7 +54,9 @@ class _RoomState extends State<Room> with SecureStorageMixin {
     return StreamBuilder(
       stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.data['beer'] != null) {
+        if (snapshot.data == null || snapshot.data == 400) {
+          Future.microtask(() => null);
+        } else if (snapshot.data['beer'] != null) {
           Future.microtask(() => Navigator.of(context).pushNamed(
               Degustation.routeName,
               arguments: DegustationData(

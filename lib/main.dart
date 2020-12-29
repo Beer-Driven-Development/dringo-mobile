@@ -58,20 +58,24 @@ void main() async {
   }
 
   onDegustationReceived(LinkedHashMap<String, dynamic> degustation) {
-    var beerData = degustation['beer'];
-    List<dynamic> pivotsData = degustation['pivots'];
+    if (degustation['status'] == 400) {
+      streamSocket.addResponse(degustation['status']);
+    } else {
+      var beerData = degustation['beer'];
+      List<dynamic> pivotsData = degustation['pivots'];
 
-    Beer beer = new Beer.fromJson(beerData);
-    List<Pivot> pivots = new List<Pivot>();
+      Beer beer = new Beer.fromJson(beerData);
+      List<Pivot> pivots = new List<Pivot>();
 
-    pivotsData.forEach((pivot) {
-      Pivot pivotToAdd = Pivot.fromJson(pivot);
-      pivots.add(pivotToAdd);
-    });
+      pivotsData.forEach((pivot) {
+        Pivot pivotToAdd = Pivot.fromJson(pivot);
+        pivots.add(pivotToAdd);
+      });
 
-    final Map<String, dynamic> data = {'beer': beer, 'pivots': pivots};
+      final Map<String, dynamic> data = {'beer': beer, 'pivots': pivots};
 
-    streamSocket.addResponse(data);
+      streamSocket.addResponse(data);
+    }
   }
 
   onRoomJoined(String roomId) {
@@ -84,6 +88,7 @@ void main() async {
   socket.on('degustation', (data) => onDegustationReceived(data));
   socket.on('first', (data) => onDegustationReceived(data));
   socket.on('next', (data) => onDegustationReceived(data));
+  socket.on('stats', (data) => streamSocket.addResponse(data));
 
   socket.onDisconnect((_) => print('disconnect'));
 

@@ -6,6 +6,7 @@ import 'package:dringo/pages/degustation.dart';
 import 'package:dringo/pages/login.dart';
 import 'package:dringo/pages/register.dart';
 import 'package:dringo/pages/room.dart';
+import 'package:dringo/pages/statistics.dart';
 
 final routes = {
   DashBoard.routeName: (ctx) => DashBoard(),
@@ -16,4 +17,5 @@ final routes = {
   CreateRoomCategories.routeName: (ctx) => CreateRoomCategories(),
   CreateRoomBeers.routeName: (ctx) => CreateRoomBeers(),
   Degustation.routeName: (ctx) => Degustation(),
+  Statistics.routeName: (ctx) => Statistics(),
 };

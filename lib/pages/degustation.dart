@@ -9,6 +9,7 @@ import 'package:dringo/domain/room.dart';
 import 'package:dringo/domain/secure_storage.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/main.dart';
+import 'package:dringo/pages/statistics.dart';
 import 'package:dringo/providers/degustation_provider.dart';
 import 'package:dringo/providers/user_provider.dart';
 import 'package:dringo/services/stream_socket.dart';
@@ -30,6 +31,9 @@ class _DegustationState extends State<Degustation> with SecureStorageMixin {
   Rating currentRating = new Rating();
   Stream xD;
   Room room;
+  bool status;
+  String token;
+
   @override
   void initState() {
     Future.delayed(Duration.zero).then((_) {
@@ -43,6 +47,7 @@ class _DegustationState extends State<Degustation> with SecureStorageMixin {
 
   void getUser() async {
     user = await Provider.of<UserProvider>(context, listen: false).getUser();
+    token = await getSecureStorage("token");
   }
 
   void getNext() async {
@@ -95,9 +100,15 @@ class _DegustationState extends State<Degustation> with SecureStorageMixin {
             stream: xD,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData) {
-                map = snapshot.data;
-                beer = map['beer'];
-                pivots = map['pivots'];
+                if (snapshot.data == 400) {
+                  var message = new MessageModel().fromIdToJson(token, room.id);
+                  emit('getStats', message);
+                  Navigator.pushNamed(context, Statistics.routeName);
+                } else if (snapshot.data != 400) {
+                  map = snapshot.data;
+                  beer = map['beer'];
+                  pivots = map['pivots'];
+                }
               }
 
               return Column(

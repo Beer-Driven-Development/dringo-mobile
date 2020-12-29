@@ -12,9 +12,17 @@ import 'package:http/http.dart';
 class DegustationProvider with ChangeNotifier, SecureStorageMixin {
   List<Beer> _beers = [];
   Beer _currentBeer;
-
+  bool _isCompleted = false;
   Beer get currentBeer {
     return _currentBeer;
+  }
+
+  bool get isCompleted {
+    return _isCompleted;
+  }
+
+  set isCompleted(bool status) {
+    _isCompleted = status;
   }
 
   List<Pivot> _pivots = [];
@@ -105,9 +113,9 @@ class DegustationProvider with ChangeNotifier, SecureStorageMixin {
             body: json.encode(data));
 
     if (response.statusCode == 400) {
-      return;
-    }
-    if (response.statusCode == 201) {
+      isCompleted = true;
+      notifyListeners();
+    } else if (response.statusCode == 201) {
       final responseData = json.decode(response.body);
       final Beer loadedBeer = new Beer.fromJson(responseData['beer']);
 
