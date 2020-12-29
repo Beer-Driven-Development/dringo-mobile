@@ -60,6 +60,10 @@ class _DegustationState extends State<Degustation> with SecureStorageMixin {
         .first(room.id);
   }
 
+  void getStats() async {
+    await Provider.of<DegustationProvider>(context, listen: false)
+        .getStats(room.id);
+  }
   @override
   Widget build(BuildContext context) {
     // final SocketService socketService = injector.get<SocketService>();
@@ -97,13 +101,15 @@ class _DegustationState extends State<Degustation> with SecureStorageMixin {
         floatingActionButton: _getFAB(),
         body: Container(
           child: StreamBuilder(
-            stream: xD,
+            stream: streamSocket.getResponse,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data == 400) {
                   var message = new MessageModel().fromIdToJson(token, room.id);
                   emit('getStats', message);
-                  Navigator.pushNamed(context, Statistics.routeName);
+                  getStats();
+                  Navigator.pushReplacementNamed(
+                      context, Statistics.routeName, arguments: room.id);
                 } else if (snapshot.data != 400) {
                   map = snapshot.data;
                   beer = map['beer'];

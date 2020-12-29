@@ -51,7 +51,8 @@ class _RoomState extends State<Room> with SecureStorageMixin {
       listen: false,
     ).findById(id);
 
-    return StreamBuilder(
+    return 
+      StreamBuilder(
       stream: streamSocket.getResponse,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.data == null || snapshot.data == 400) {

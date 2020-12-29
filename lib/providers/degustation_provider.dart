@@ -4,6 +4,7 @@ import 'package:dringo/domain/beer.dart';
 import 'package:dringo/domain/pivot.dart';
 import 'package:dringo/domain/rating.dart';
 import 'package:dringo/domain/secure_storage.dart';
+import 'package:dringo/domain/stats.dart';
 import 'package:dringo/domain/user.dart';
 import 'package:dringo/util/app_url.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,12 @@ class DegustationProvider with ChangeNotifier, SecureStorageMixin {
   List<Beer> _beers = [];
   Beer _currentBeer;
   bool _isCompleted = false;
+  List<Stats> _stats = [];
+
+
   Beer get currentBeer {
     return _currentBeer;
   }
-
   bool get isCompleted {
     return _isCompleted;
   }
@@ -33,6 +36,10 @@ class DegustationProvider with ChangeNotifier, SecureStorageMixin {
 
   List<Pivot> get pivots {
     return [..._pivots];
+  }
+
+  List<Stats> get stats {
+    return [... _stats];
   }
 
   Future<void> start(int roomId, List<User> participants) async {
@@ -156,4 +163,33 @@ class DegustationProvider with ChangeNotifier, SecureStorageMixin {
       return rating;
     }
   }
+
+  Future<void> getStats(int roomId) async {
+    final token = await this.getSecureStorage("token");
+    if (token == null) {
+      return;
+    }
+
+    final response = await get(
+      AppUrl.rooms + '/' + roomId.toString() +'/stats',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body) as List;
+
+      final List<Stats> stats = [];
+      for (var stat in responseData) {
+        var currentStat = new Stats.fromJson(stat);
+        stats.add(currentStat);
+      }
+      _stats = stats;
+      notifyListeners();
+    }
+  }
+
+
 }
